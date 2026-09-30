@@ -173,6 +173,7 @@
     }
     .btn-new-chat { background: rgba(0, 123, 255, 0.12); border-color: var(--border); color: var(--blue); }
     .btn-settings { background: rgba(0, 209, 178, 0.1); border-color: rgba(0, 209, 178, 0.25); color: var(--cyan); }
+    .btn-notes { background: rgba(245, 166, 35, 0.12); border-color: rgba(245, 166, 35, 0.3); color: #f5a623; }
     .btn-logout { background: transparent; border-color: rgba(255, 77, 109, 0.3); color: var(--danger); }
     .btn-theme {
       background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);
@@ -217,69 +218,82 @@
 
     .chat-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
     .messages {
-      flex: 1; overflow-y: auto; padding: 1.5rem 1.5rem 1rem;
-      display: flex; flex-direction: column; gap: 1rem;
+      flex: 1; overflow-y: auto; padding: 1.25rem 1.1rem 1rem;
+      display: flex; flex-direction: column; gap: 1.1rem;
+      width: 100%;
     }
     .msg {
-      display: flex; gap: 10px; max-width: 780px; width: 100%;
-      margin: 0 auto; animation: msgIn 0.35s ease both;
-      align-items: flex-start;
+      display: flex; gap: 10px; width: 100%;
+      max-width: 100%;
+      margin: 0;
+      animation: msgIn 0.35s ease both;
+      align-items: flex-end;
     }
-    /* IA à esquerda */
+    /* IA — colada na esquerda */
     .msg.bot {
       justify-content: flex-start;
       flex-direction: row;
+      align-self: stretch;
+      padding-right: clamp(2rem, 22vw, 14rem);
     }
-    /* Você à direita */
+    /* Você — colado na direita */
     .msg.user {
       justify-content: flex-end;
       flex-direction: row-reverse;
+      align-self: stretch;
+      padding-left: clamp(2rem, 22vw, 14rem);
     }
     @keyframes msgIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .msg-avatar {
-      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; font-weight: 700;
+      font-size: 0.8rem; font-weight: 700;
     }
     .msg.user .msg-avatar { background: var(--user-avatar-bg); color: var(--blue); }
-    .msg.bot .msg-avatar { background: var(--gradient); color: white; font-size: 0.7rem; }
+    .msg.bot .msg-avatar { background: var(--gradient); color: white; font-size: 0.65rem; }
     .msg-content {
-      max-width: min(85%, 560px); padding-top: 2px; min-width: 0;
-    }
-    .msg.user .msg-content {
-      display: flex; justify-content: flex-end;
+      max-width: 100%;
+      min-width: 0;
+      flex: 0 1 auto;
     }
     .msg-content .md {
-      font-size: var(--msg-size); line-height: 1.7; color: var(--text); word-wrap: break-word;
+      font-size: var(--msg-size); line-height: 1.65; color: var(--text); word-wrap: break-word;
+      display: inline-block;
+      max-width: 100%;
     }
     /* Balão do usuário */
     .msg.user .msg-content .md {
       color: var(--text);
       white-space: pre-wrap;
-      background: rgba(0, 123, 255, 0.18);
-      border: 1px solid rgba(0, 123, 255, 0.25);
-      border-radius: 16px 16px 4px 16px;
-      padding: 0.75rem 1rem;
+      background: rgba(0, 123, 255, 0.22);
+      border: 1px solid rgba(0, 123, 255, 0.28);
+      border-radius: 18px 18px 4px 18px;
+      padding: 0.7rem 1rem;
       text-align: left;
     }
     /* Balão da IA */
     .msg.bot .msg-content .md {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-soft);
-      border-radius: 16px 16px 16px 4px;
-      padding: 0.75rem 1rem;
+      border-radius: 18px 18px 18px 4px;
+      padding: 0.7rem 1rem;
     }
     [data-theme="light"] .msg.user .msg-content .md {
-      background: rgba(0, 102, 224, 0.1);
-      border-color: rgba(0, 102, 224, 0.2);
+      background: rgba(0, 102, 224, 0.12);
+      border-color: rgba(0, 102, 224, 0.22);
     }
     [data-theme="light"] .msg.bot .msg-content .md {
       background: #fff;
       border-color: var(--border-soft);
       box-shadow: 0 1px 4px rgba(15, 40, 80, 0.06);
+    }
+    @media (max-width: 700px) {
+      .msg.bot { padding-right: 1.25rem; }
+      .msg.user { padding-left: 1.25rem; }
+      .messages { padding: 1rem 0.75rem; }
     }
     .msg-content .md p { margin: 0 0 0.75rem; }
     .msg-content .md p:last-child { margin-bottom: 0; }
@@ -301,6 +315,78 @@
     }
     .msg-content .md pre code { background: none; color: var(--text); }
     .msg-content .error-msg { color: var(--danger); white-space: pre-wrap; }
+    .msg-content .gen-image {
+      display: block; max-width: 100%; width: min(420px, 100%);
+      border-radius: 14px; margin-top: 0.5rem;
+      border: 1px solid var(--border-soft);
+    }
+    .msg-content .img-caption {
+      font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;
+    }
+
+    /* === NOTAS (Post-its) === */
+    .notes-overlay {
+      display: none; position: fixed; inset: 0; z-index: 3200;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      justify-content: flex-end;
+    }
+    .notes-overlay.open { display: flex; }
+    .notes-panel {
+      width: min(420px, 100%); height: 100%;
+      background: var(--bg-elevated); border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; box-shadow: var(--shadow);
+    }
+    .notes-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-soft);
+    }
+    .notes-header h2 { font-size: 1.05rem; font-weight: 700; }
+    .notes-toolbar {
+      padding: 0.85rem 1.2rem; display: flex; gap: 0.5rem; flex-wrap: wrap;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .notes-toolbar button {
+      padding: 0.5rem 0.85rem; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--bg-input); color: var(--text);
+      font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    }
+    .notes-toolbar .btn-add-note {
+      background: var(--gradient); border: none; color: white;
+    }
+    .notes-list {
+      flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.85rem;
+    }
+    .note-card {
+      border-radius: 12px; padding: 0.9rem 1rem; position: relative;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border: 1px solid transparent;
+    }
+    .note-card.y { background: #fff3bf; color: #1a1a1a; }
+    .note-card.p { background: #ffdeeb; color: #1a1a1a; }
+    .note-card.b { background: #d0ebff; color: #1a1a1a; }
+    .note-card.g { background: #d3f9d8; color: #1a1a1a; }
+    [data-theme="dark"] .note-card.y { background: #5c4b1a; color: #fff8e1; }
+    [data-theme="dark"] .note-card.p { background: #5c2a40; color: #ffe3ec; }
+    [data-theme="dark"] .note-card.b { background: #1a3a5c; color: #d0ebff; }
+    [data-theme="dark"] .note-card.g { background: #1a4a2e; color: #d3f9d8; }
+    .note-card textarea {
+      width: 100%; min-height: 72px; background: transparent; border: none;
+      outline: none; resize: vertical; font-family: 'Montserrat', sans-serif;
+      font-size: 0.88rem; line-height: 1.45; color: inherit;
+    }
+    .note-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 0.4rem; font-size: 0.7rem; opacity: 0.7;
+    }
+    .note-actions { display: flex; gap: 0.35rem; }
+    .note-actions button {
+      border: none; background: rgba(0,0,0,0.08); border-radius: 6px;
+      padding: 0.2rem 0.45rem; cursor: pointer; font-size: 0.75rem;
+    }
+    [data-theme="dark"] .note-actions button { background: rgba(255,255,255,0.1); color: inherit; }
+    .notes-empty {
+      text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 2rem 1rem;
+    }
 
     .welcome {
       flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -628,6 +714,7 @@
       </div>
       <div class="header-actions">
         <button class="btn-theme" id="btn-theme" onclick="alternarTema()" title="Tema">🌙</button>
+        <button class="btn-header btn-notes" onclick="abrirNotas()" title="Notas">📝 Notas</button>
         <button class="btn-header btn-settings" onclick="abrirSettings()">⚙ Configurações</button>
         <button class="btn-header btn-new-chat" onclick="novaConversa()">+ Nova</button>
         <button class="btn-header btn-logout" onclick="fazerLogout()">Sair</button>
@@ -806,6 +893,23 @@
     </div>
   </div>
 
+  <div class="notes-overlay" id="notes-overlay" onclick="if(event.target===this)fecharNotas()">
+    <div class="notes-panel" onclick="event.stopPropagation()">
+      <div class="notes-header">
+        <h2>📝 Notas</h2>
+        <button class="settings-close" onclick="fecharNotas()">×</button>
+      </div>
+      <div class="notes-toolbar">
+        <button type="button" class="btn-add-note" onclick="criarNota()">+ Nova nota</button>
+        <button type="button" onclick="criarNota('y')">Amarela</button>
+        <button type="button" onclick="criarNota('p')">Rosa</button>
+        <button type="button" onclick="criarNota('b')">Azul</button>
+        <button type="button" onclick="criarNota('g')">Verde</button>
+      </div>
+      <div class="notes-list" id="notes-list"></div>
+    </div>
+  </div>
+
   <script>
     /* Fallback embutido. Preferência: painel Ops (bth-ops.html) */
     const GROQ_API_KEY_FALLBACK = '';
@@ -833,12 +937,104 @@
     const STORAGE_PREFS = 'horizon_ai_prefs_v1';
 
     const BASE_SYSTEM = `Você é a Horizon AI, assistente da Beyond the Horizon.
-Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com).`;
+Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com).
+O app também gera imagens: se o usuário pedir uma imagem, o sistema gera automaticamente.
+Não diga que você não consegue gerar imagens.`;
 
     let usuario = null, conversas = [], conversaAtualId = null, gerando = false;
     let prefs = carregarPrefs();
     let reconhecimento = null;
     let gravando = false;
+    let notas = [];
+
+    function notesKey() {
+      return 'horizon_ai_notes_v1_' + (usuario ? usuario.id : 'guest');
+    }
+    function carregarNotas() {
+      try {
+        notas = JSON.parse(localStorage.getItem(notesKey()) || '[]');
+        if (!Array.isArray(notas)) notas = [];
+      } catch (e) { notas = []; }
+    }
+    function salvarNotas() {
+      localStorage.setItem(notesKey(), JSON.stringify(notas));
+    }
+    function abrirNotas() {
+      carregarNotas();
+      renderizarNotas();
+      document.getElementById('notes-overlay').classList.add('open');
+    }
+    function fecharNotas() {
+      document.getElementById('notes-overlay').classList.remove('open');
+    }
+    function criarNota(cor) {
+      const cores = ['y', 'p', 'b', 'g'];
+      const c = cores.includes(cor) ? cor : cores[Math.floor(Math.random() * cores.length)];
+      notas.unshift({
+        id: 'n_' + Date.now(),
+        texto: '',
+        cor: c,
+        criado: new Date().toISOString()
+      });
+      salvarNotas();
+      renderizarNotas();
+    }
+    function atualizarNota(id, texto) {
+      const n = notas.find(x => x.id === id);
+      if (!n) return;
+      n.texto = texto;
+      salvarNotas();
+    }
+    function excluirNota(id) {
+      if (!confirm('Excluir esta nota?')) return;
+      notas = notas.filter(n => n.id !== id);
+      salvarNotas();
+      renderizarNotas();
+    }
+    function mudarCorNota(id) {
+      const ordem = ['y', 'p', 'b', 'g'];
+      const n = notas.find(x => x.id === id);
+      if (!n) return;
+      const i = ordem.indexOf(n.cor);
+      n.cor = ordem[(i + 1) % ordem.length];
+      salvarNotas();
+      renderizarNotas();
+    }
+    function renderizarNotas() {
+      const el = document.getElementById('notes-list');
+      if (!notas.length) {
+        el.innerHTML = '<div class="notes-empty">Nenhuma nota ainda.<br>Clique em “+ Nova nota”.</div>';
+        return;
+      }
+      el.innerHTML = notas.map(n => `
+        <div class="note-card ${n.cor || 'y'}">
+          <textarea placeholder="Escreva sua nota..." oninput="atualizarNota('${n.id}', this.value)">${escapeHtml(n.texto || '')}</textarea>
+          <div class="note-meta">
+            <span>${n.criado ? new Date(n.criado).toLocaleDateString('pt-BR') : ''}</span>
+            <div class="note-actions">
+              <button type="button" onclick="mudarCorNota('${n.id}')" title="Mudar cor">🎨</button>
+              <button type="button" onclick="excluirNota('${n.id}')" title="Excluir">🗑</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function detectarPedidoImagem(texto) {
+      const t = texto.toLowerCase();
+      if (/^(gerar?\s+imagem|imagem:|\/img|\/image|desenhe|gere uma imagem)/i.test(texto.trim())) return true;
+      return /(gera(r)? (uma )?imagem|cria(r)? (uma )?imagem|faz(er)? (uma )?imagem|desenha|gere uma ilustra)/i.test(t);
+    }
+    function extrairPromptImagem(texto) {
+      let p = texto.trim();
+      p = p.replace(/^(gerar?\s+imagem|imagem:|\/img|\/image)\s*/i, '');
+      p = p.replace(/^(por favor[, ]*)?(pode )?(gerar?|cria(r)?|faz(er)?|desenha(r)?) (uma )?(imagem|ilustração|foto) (de |do |da |com )?/i, '');
+      return p.trim() || texto.trim();
+    }
+    function urlImagem(prompt) {
+      const q = encodeURIComponent(prompt.slice(0, 300));
+      return 'https://image.pollinations.ai/prompt/' + q + '?width=768&height=768&nologo=true&seed=' + Date.now();
+    }
 
     function carregarPrefs() {
       try {
@@ -1096,6 +1292,7 @@ Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com)
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('app').classList.add('active');
       document.getElementById('user-chip').textContent = usuario.nome || usuario.user;
+      carregarNotas();
       try { conversas = JSON.parse(localStorage.getItem(convKey()) || '[]'); if (!Array.isArray(conversas)) conversas = []; }
       catch (e) { conversas = []; }
       aplicarTema(prefs.theme || 'dark');
@@ -1216,6 +1413,7 @@ Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com)
       text = text.replace(/^# (.+)$/gm, '<h1>$1</h1>');
       text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      text = text.replace(/!\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)/g, '<img class="gen-image" src="$2" alt="$1" loading="lazy">');
       text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
       text = text.replace(/(^|[\s(])(https?:\/\/[^\s<]+[^\s<.,;:!?)\]"'])/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
       text = text.replace(/((?:^[\-\*] .+(?:\n|$))+)/gm, block => {
@@ -1237,10 +1435,10 @@ Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com)
       let sug = '';
       if (prefs.sugestoes !== false) {
         sug = `<div class="suggestions">
-          <button class="suggestion" onclick="usarSugestao('Me ajuda a escrever um texto profissional')"><strong>✍️ Escrever</strong><span>Texto profissional</span></button>
-          <button class="suggestion" onclick="usarSugestao('Explica o que é inteligência artificial')"><strong>📘 Explicar</strong><span>Qualquer assunto</span></button>
-          <button class="suggestion" onclick="usarSugestao('Organiza um plano para lançar um produto de IA')"><strong>🎯 Planejar</strong><span>Projetos e metas</span></button>
-          <button class="suggestion" onclick="usarSugestao('Gera 5 ideias de posts para Instagram de tech')"><strong>💡 Criar</strong><span>Ideias e conteúdo</span></button>
+          <button class="suggestion" onclick="usarSugestao('Me ajuda a escrever um texto profissional')"><strong>Escrever</strong><span>Texto profissional</span></button>
+          <button class="suggestion" onclick="usarSugestao('Gera uma imagem de um horizonte futurista com IA')"><strong>Imagem</strong><span>Gerar ilustração</span></button>
+          <button class="suggestion" onclick="usarSugestao('Organiza um plano para lançar um produto de IA')"><strong>Planejar</strong><span>Projetos e metas</span></button>
+          <button class="suggestion" onclick="abrirNotas()"><strong>Notas</strong><span>Post-its digitais</span></button>
         </div>`;
       }
       document.getElementById('messages').innerHTML = `
@@ -1279,13 +1477,20 @@ Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com)
       conversaAtualId = id;
       const messages = document.getElementById('messages');
       messages.innerHTML = '';
-      conv.mensagens.forEach(m => appendMsg(m.role, m.text, false));
+      conv.mensagens.forEach(m => {
+        let img = m.imageUrl || null;
+        if (!img && m.text) {
+          const mdm = m.text.match(/!\[.*?\]\((https?:\/\/[^\s)]+)\)/);
+          if (mdm) img = mdm[1];
+        }
+        appendMsg(m.role, m.text, false, false, img);
+      });
       renderizarListaConversas();
       fecharSidebar();
       messages.scrollTop = messages.scrollHeight;
     }
 
-    function appendMsg(role, text, animate = true, isError = false) {
+    function appendMsg(role, text, animate = true, isError = false, imageUrl = null) {
       const welcome = document.getElementById('welcome');
       if (welcome) welcome.remove();
       const messages = document.getElementById('messages');
@@ -1296,6 +1501,9 @@ Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com)
       if (isError) body = `<p class="error-msg">${escapeHtml(text)}</p>`;
       else if (role === 'bot') body = `<div class="md">${markdownToHtml(text)}</div>`;
       else body = `<div class="md">${escapeHtml(text)}</div>`;
+      if (imageUrl) {
+        body += `<img class="gen-image" src="${escapeHtml(imageUrl)}" alt="Imagem gerada" loading="lazy"><div class="img-caption">Imagem gerada</div>`;
+      }
       div.innerHTML = `<div class="msg-avatar">${role === 'user' ? 'V' : 'H'}</div><div class="msg-content">${body}</div>`;
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
@@ -1361,15 +1569,33 @@ Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com)
       mostrarTyping();
 
       try {
-        const resposta = await chamarGroq(conv.mensagens);
-        removerTyping();
-        appendMsg('bot', resposta);
-        conv.mensagens.push({ role: 'bot', text: resposta });
-        salvarConversas();
+        if (detectarPedidoImagem(texto)) {
+          const prompt = extrairPromptImagem(texto);
+          const imgUrl = urlImagem(prompt);
+          const resposta = 'Aqui está a imagem gerada para: **' + prompt + '**';
+          // pré-carrega
+          await new Promise((resolve) => {
+            const im = new Image();
+            im.onload = resolve;
+            im.onerror = resolve;
+            im.src = imgUrl;
+            setTimeout(resolve, 12000);
+          });
+          removerTyping();
+          appendMsg('bot', resposta, true, false, imgUrl);
+          conv.mensagens.push({ role: 'bot', text: resposta + '\n\n![' + prompt + '](' + imgUrl + ')', imageUrl: imgUrl });
+          salvarConversas();
+        } else {
+          const resposta = await chamarGroq(conv.mensagens);
+          removerTyping();
+          appendMsg('bot', resposta);
+          conv.mensagens.push({ role: 'bot', text: resposta });
+          salvarConversas();
+        }
       } catch (err) {
         removerTyping();
         let msg = err.message || 'Erro na API.';
-        if (/Failed to fetch|CORS/i.test(msg)) msg = 'Use Live Server (localhost).';
+        if (/Failed to fetch|CORS/i.test(msg)) msg = 'Falha de rede. Tente de novo.';
         appendMsg('bot', 'Erro: ' + msg, true, true);
       }
 
