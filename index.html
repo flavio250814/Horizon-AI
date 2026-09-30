@@ -8,32 +8,63 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root, [data-theme="dark"] {
-      --bg: #050B1A; --bg-elevated: #0A1A3A; --bg-soft: rgba(10, 26, 58, 0.85);
-      --bg-input: rgba(5, 11, 26, 0.75); --bg-sidebar: rgba(8, 16, 35, 0.95);
-      --bg-header: rgba(5, 11, 26, 0.95); --bg-msg-code: rgba(5, 11, 26, 0.85);
-      --text: #FFFFFF; --text-muted: #A8B8D0; --border: rgba(0, 123, 255, 0.22);
-      --border-soft: rgba(0, 123, 255, 0.12); --cyan: #00D1B2; --blue: #007BFF;
-      --gradient: linear-gradient(135deg, #007BFF, #00D1B2); --danger: #ff4d6d;
-      --shadow: 0 20px 60px rgba(0,0,0,0.45); --msg-size: 0.95rem;
-      --user-avatar-bg: rgba(0, 123, 255, 0.2); --suggest-bg: rgba(10, 26, 58, 0.6);
-      --toggle-off: rgba(168, 184, 208, 0.3); --rec: #ff4d6d;
-    }
-    [data-theme="light"] {
-      --bg: #F4F7FC; --bg-elevated: #FFFFFF; --bg-soft: rgba(255, 255, 255, 0.95);
-      --bg-input: #F0F4FA; --bg-sidebar: #FFFFFF; --bg-header: rgba(255, 255, 255, 0.95);
-      --bg-msg-code: #E8EEF8; --text: #0B1529; --text-muted: #5A6A85;
-      --border: rgba(0, 90, 200, 0.18); --border-soft: rgba(0, 90, 200, 0.1);
-      --cyan: #00A896; --blue: #0066E0; --gradient: linear-gradient(135deg, #0066E0, #00A896);
-      --danger: #E11D48; --shadow: 0 20px 50px rgba(15, 40, 80, 0.12);
-      --user-avatar-bg: rgba(0, 102, 224, 0.12); --suggest-bg: #FFFFFF;
-      --toggle-off: rgba(90, 106, 133, 0.25); --rec: #E11D48;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text);
-      min-height: 100vh; overflow-x: hidden; transition: background 0.25s, color 0.25s;
+      --bg: #050B1A;
+      --bg-elevated: #0A1A3A;
+      --bg-soft: rgba(10, 26, 58, 0.85);
+      --bg-input: rgba(5, 11, 26, 0.75);
+      --bg-sidebar: rgba(8, 16, 35, 0.95);
+      --bg-header: rgba(5, 11, 26, 0.95);
+      --bg-msg-code: rgba(5, 11, 26, 0.85);
+      --text: #FFFFFF;
+      --text-muted: #A8B8D0;
+      --border: rgba(0, 123, 255, 0.22);
+      --border-soft: rgba(0, 123, 255, 0.12);
+      --cyan: #00D1B2;
+      --blue: #007BFF;
+      --gradient: linear-gradient(135deg, #007BFF, #00D1B2);
+      --danger: #ff4d6d;
+      --shadow: 0 20px 60px rgba(0,0,0,0.45);
+      --msg-size: 0.95rem;
+      --user-avatar-bg: rgba(0, 123, 255, 0.2);
+      --suggest-bg: rgba(10, 26, 58, 0.6);
+      --toggle-off: rgba(168, 184, 208, 0.3);
+      --rec: #ff4d6d;
     }
 
+    [data-theme="light"] {
+      --bg: #F4F7FC;
+      --bg-elevated: #FFFFFF;
+      --bg-soft: rgba(255, 255, 255, 0.95);
+      --bg-input: #F0F4FA;
+      --bg-sidebar: #FFFFFF;
+      --bg-header: rgba(255, 255, 255, 0.95);
+      --bg-msg-code: #E8EEF8;
+      --text: #0B1529;
+      --text-muted: #5A6A85;
+      --border: rgba(0, 90, 200, 0.18);
+      --border-soft: rgba(0, 90, 200, 0.1);
+      --cyan: #00A896;
+      --blue: #0066E0;
+      --gradient: linear-gradient(135deg, #0066E0, #00A896);
+      --danger: #E11D48;
+      --shadow: 0 20px 50px rgba(15, 40, 80, 0.12);
+      --user-avatar-bg: rgba(0, 102, 224, 0.12);
+      --suggest-bg: #FFFFFF;
+      --toggle-off: rgba(90, 106, 133, 0.25);
+      --rec: #E11D48;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    /* AUTH */
     #auth-screen {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
       padding: 1.5rem; position: relative; overflow: hidden;
@@ -97,8 +128,6 @@
       cursor: pointer; text-decoration: underline;
     }
     .auth-hint { text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 1rem; opacity: 0.7; }
-
-    /* Cadeado senha — sem tooltip nativo */
     .pass-wrap { position: relative; }
     .pass-wrap input { padding-right: 3rem; }
     .btn-lock {
@@ -106,12 +135,17 @@
       width: 36px; height: 36px; border: none; border-radius: 10px;
       background: transparent; color: var(--text-muted); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.15rem; line-height: 1;
       transition: background 0.15s, color 0.15s;
+    }
+    .btn-lock svg {
+      width: 18px; height: 18px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
     }
     .btn-lock:hover { background: rgba(0, 123, 255, 0.12); color: var(--blue); }
     .btn-lock.open { color: var(--cyan); }
 
+    /* APP */
     #app { display: none; height: 100vh; flex-direction: column; }
     #app.active { display: flex; }
     .app-header {
@@ -148,7 +182,8 @@
 
     .app-body { flex: 1; display: flex; overflow: hidden; }
     .sidebar {
-      width: 280px; background: var(--bg-sidebar); border-right: 1px solid var(--border-soft);
+      width: 280px; background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-soft);
       display: flex; flex-direction: column; flex-shrink: 0;
     }
     .sidebar-top { padding: 1rem; border-bottom: 1px solid var(--border-soft); }
@@ -201,15 +236,20 @@
     .msg.user .msg-avatar { background: var(--user-avatar-bg); color: var(--blue); }
     .msg.bot .msg-avatar { background: var(--gradient); color: white; font-size: 0.7rem; }
     .msg-content { flex: 1; padding-top: 2px; min-width: 0; }
-    .msg-content .md { font-size: var(--msg-size); line-height: 1.7; color: var(--text); word-wrap: break-word; }
+    .msg-content .md {
+      font-size: var(--msg-size); line-height: 1.7; color: var(--text); word-wrap: break-word;
+    }
     .msg.user .msg-content .md { color: var(--text-muted); white-space: pre-wrap; }
     .msg-content .md p { margin: 0 0 0.75rem; }
     .msg-content .md p:last-child { margin-bottom: 0; }
-    .msg-content .md h2 { font-size: 1.1rem; font-weight: 700; margin: 1rem 0 0.5rem; }
-    .msg-content .md h3 { font-size: 1rem; color: var(--cyan); font-weight: 700; margin: 1rem 0 0.5rem; }
-    .msg-content .md strong { font-weight: 700; }
+    .msg-content .md h1, .msg-content .md h2, .msg-content .md h3 {
+      font-weight: 700; margin: 1rem 0 0.5rem; color: var(--text);
+    }
+    .msg-content .md h2 { font-size: 1.1rem; }
+    .msg-content .md h3 { font-size: 1rem; color: var(--cyan); }
+    .msg-content .md strong { font-weight: 700; color: var(--text); }
     .msg-content .md ul, .msg-content .md ol { margin: 0.4rem 0 0.85rem; padding-left: 1.4rem; }
-    .msg-content .md a { color: var(--cyan); text-decoration: underline; }
+    .msg-content .md a { color: var(--cyan); text-decoration: underline; cursor: pointer; }
     .msg-content .md code {
       font-family: ui-monospace, Consolas, monospace; font-size: 0.86em;
       background: rgba(0, 123, 255, 0.1); border-radius: 6px; padding: 0.1em 0.4em; color: var(--cyan);
@@ -233,9 +273,10 @@
     .welcome p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; }
     .suggestions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; }
     .suggestion {
-      padding: 1rem; background: var(--suggest-bg); border: 1px solid var(--border);
-      border-radius: 14px; text-align: left; cursor: pointer;
-      font-family: 'Montserrat', sans-serif; color: var(--text);
+      padding: 1rem; background: var(--suggest-bg);
+      border: 1px solid var(--border); border-radius: 14px;
+      text-align: left; cursor: pointer; font-family: 'Montserrat', sans-serif; color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .suggestion:hover { border-color: var(--blue); }
     .suggestion strong { display: block; font-size: 0.85rem; margin-bottom: 0.25rem; }
@@ -247,7 +288,9 @@
       background: var(--bg-elevated); border: 1px solid var(--border);
       border-radius: 16px; padding: 0.55rem 0.6rem 0.55rem 1rem;
     }
-    .input-wrap:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12); }
+    .input-wrap:focus-within {
+      border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+    }
     .input-wrap.recording {
       border-color: var(--rec);
       box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.2);
@@ -261,23 +304,52 @@
     .btn-mic, .btn-send {
       width: 42px; height: 42px; border-radius: 12px; border: none;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; font-size: 1.15rem; transition: transform 0.15s, background 0.15s;
+      flex-shrink: 0; transition: transform 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
     }
     .btn-mic {
-      background: rgba(0, 123, 255, 0.12); color: var(--blue);
-      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
     }
-    .btn-mic:hover { background: rgba(0, 123, 255, 0.2); }
+    .btn-mic svg {
+      width: 20px; height: 20px;
+      display: block;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .btn-mic:hover {
+      background: rgba(0, 123, 255, 0.1);
+      color: var(--blue);
+    }
     .btn-mic.recording {
-      background: var(--rec); color: white; border-color: var(--rec);
-      animation: pulseRec 1s ease-in-out infinite;
+      background: rgba(255, 77, 109, 0.12);
+      color: var(--rec);
+      border-color: rgba(255, 77, 109, 0.35);
+      box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.12);
+      animation: pulseRec 1.4s ease-in-out infinite;
+    }
+    .btn-mic.recording svg {
+      fill: currentColor;
+      stroke: currentColor;
     }
     @keyframes pulseRec {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
+      50% { transform: scale(1.04); }
     }
     .btn-send { background: var(--gradient); color: white; }
     .btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-send svg {
+      width: 18px; height: 18px;
+      display: block;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
     .input-hint { text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 0.6rem; opacity: 0.75; }
     .rec-status {
       display: none; text-align: center; font-size: 0.78rem; color: var(--rec);
@@ -304,6 +376,7 @@
       30% { transform: translateY(-5px); opacity: 1; }
     }
 
+    /* SETTINGS */
     .settings-overlay {
       display: none; position: fixed; inset: 0; z-index: 3000;
       background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(4px);
@@ -355,10 +428,11 @@
     .setting-info { flex: 1; min-width: 0; }
     .setting-info strong { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 0.15rem; }
     .setting-info span { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
-    .setting-control select {
+    .setting-control select, .setting-control input[type="text"] {
       padding: 0.5rem 0.75rem; background: var(--bg-input);
       border: 1px solid var(--border); border-radius: 10px;
-      color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 0.82rem; min-width: 160px;
+      color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 0.82rem;
+      outline: none; min-width: 160px;
     }
     .setting-control textarea {
       width: 100%; min-height: 100px; padding: 0.75rem;
@@ -368,7 +442,7 @@
     }
     .toggle {
       width: 44px; height: 24px; border-radius: 12px; border: none;
-      background: var(--toggle-off); cursor: pointer; position: relative;
+      background: var(--toggle-off); cursor: pointer; position: relative; transition: background 0.2s;
     }
     .toggle.on { background: var(--blue); }
     .toggle::after {
@@ -383,12 +457,17 @@
       font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer;
     }
     .theme-pill.active { background: var(--gradient); color: white; border-color: transparent; }
-    .btn-setting-action, .btn-setting-danger {
-      padding: 0.5rem 0.9rem; border-radius: 10px;
+    .btn-setting-action {
+      padding: 0.5rem 0.9rem; border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(0, 123, 255, 0.1); color: var(--blue);
       font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer;
     }
-    .btn-setting-action { border: 1px solid var(--border); background: rgba(0, 123, 255, 0.1); color: var(--blue); }
-    .btn-setting-danger { border: 1px solid rgba(255, 77, 109, 0.35); background: rgba(255, 77, 109, 0.1); color: var(--danger); }
+    .btn-setting-danger {
+      padding: 0.5rem 0.9rem; border-radius: 10px;
+      border: 1px solid rgba(255, 77, 109, 0.35);
+      background: rgba(255, 77, 109, 0.1); color: var(--danger);
+      font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    }
     .settings-footer {
       padding: 0.9rem 1.4rem; border-top: 1px solid var(--border-soft);
       display: flex; justify-content: flex-end;
@@ -415,6 +494,7 @@
       background: rgba(0, 123, 255, 0.1); border: 1px solid var(--border);
       color: var(--text-muted); cursor: pointer;
     }
+    .chip:hover { border-color: var(--cyan); color: var(--cyan); }
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 40; }
     .overlay.open { display: block; }
 
@@ -427,6 +507,7 @@
       .settings-nav-title { display: none; }
       .settings-nav-btn { white-space: nowrap; flex-shrink: 0; }
       .setting-row { flex-direction: column; align-items: flex-start; }
+      .setting-control select { min-width: 100%; width: 100%; }
     }
     @media (max-width: 768px) {
       .btn-menu { display: block; }
@@ -461,7 +542,9 @@
           <label>Senha</label>
           <div class="pass-wrap">
             <input type="password" id="login-pass" autocomplete="current-password">
-            <button type="button" class="btn-lock" id="lock-login" onclick="toggleLock('login-pass', this)" aria-label="Mostrar ou ocultar senha">🔒</button>
+            <button type="button" class="btn-lock" onclick="toggleLock('login-pass', this)" aria-label="Mostrar ou ocultar senha">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+            </button>
           </div>
         </div>
         <button type="button" class="auth-btn" onclick="fazerLogin()">Entrar</button>
@@ -472,15 +555,19 @@
         <div class="auth-field">
           <label>Senha</label>
           <div class="pass-wrap">
-            <input type="password" id="reg-pass" autocomplete="new-password">
-            <button type="button" class="btn-lock" onclick="toggleLock('reg-pass', this)" aria-label="Mostrar ou ocultar senha">🔒</button>
+            <input type="password" id="reg-pass">
+            <button type="button" class="btn-lock" onclick="toggleLock('reg-pass', this)" aria-label="Mostrar ou ocultar senha">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+            </button>
           </div>
         </div>
         <div class="auth-field">
           <label>Confirmar senha</label>
           <div class="pass-wrap">
-            <input type="password" id="reg-pass2" autocomplete="new-password">
-            <button type="button" class="btn-lock" onclick="toggleLock('reg-pass2', this)" aria-label="Mostrar ou ocultar senha">🔒</button>
+            <input type="password" id="reg-pass2">
+            <button type="button" class="btn-lock" onclick="toggleLock('reg-pass2', this)" aria-label="Mostrar ou ocultar senha">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+            </button>
           </div>
         </div>
         <button type="button" class="auth-btn" onclick="fazerCadastro()">Criar conta</button>
@@ -499,7 +586,7 @@
         <span class="user-chip" id="user-chip"></span>
       </div>
       <div class="header-actions">
-        <button class="btn-theme" id="btn-theme" onclick="alternarTema()">🌙</button>
+        <button class="btn-theme" id="btn-theme" onclick="alternarTema()" title="Tema">🌙</button>
         <button class="btn-header btn-settings" onclick="abrirSettings()">⚙ Configurações</button>
         <button class="btn-header btn-new-chat" onclick="novaConversa()">+ Nova</button>
         <button class="btn-header btn-logout" onclick="fazerLogout()">Sair</button>
@@ -518,11 +605,23 @@
         <div class="input-area">
           <div class="input-wrap" id="input-wrap">
             <textarea id="input" rows="1" placeholder="Mensagem para a Horizon AI..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-            <button type="button" class="btn-mic" id="btn-mic" onclick="toggleGravacao()" title="Gravar áudio">🎤</button>
-            <button type="button" class="btn-send" id="btn-send" onclick="enviar()">↑</button>
+            <button type="button" class="btn-mic" id="btn-mic" onclick="toggleGravacao()" aria-label="Gravar áudio">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a3.5 3.5 0 0 0-3.5 3.5v6a3.5 3.5 0 0 0 7 0v-6A3.5 3.5 0 0 0 12 2z"/>
+                <path d="M6.5 11.5a5.5 5.5 0 0 0 11 0"/>
+                <path d="M12 17v4"/>
+                <path d="M9 21h6"/>
+              </svg>
+            </button>
+            <button type="button" class="btn-send" id="btn-send" onclick="enviar()" aria-label="Enviar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14"/>
+                <path d="M13 6l6 6-6 6"/>
+              </svg>
+            </button>
           </div>
           <div class="rec-status" id="rec-status"><span class="rec-dot"></span> Gravando… fale agora</div>
-          <div class="input-hint">Clique no microfone para falar · Horizon AI pode errar</div>
+          <div class="input-hint">Toque no microfone para falar · Horizon AI pode errar</div>
         </div>
       </div>
     </div>
@@ -532,11 +631,11 @@
     <div class="settings-panel" onclick="event.stopPropagation()">
       <nav class="settings-nav">
         <div class="settings-nav-title">Configurações</div>
-        <button class="settings-nav-btn active" data-sec="geral" onclick="irSecao('geral')">⚙️ Geral</button>
-        <button class="settings-nav-btn" data-sec="conta" onclick="irSecao('conta')">👤 Conta</button>
-        <button class="settings-nav-btn" data-sec="comportamento" onclick="irSecao('comportamento')">💬 Comportamento</button>
-        <button class="settings-nav-btn" data-sec="aparencia" onclick="irSecao('aparencia')">🎨 Aparência</button>
-        <button class="settings-nav-btn" data-sec="dados" onclick="irSecao('dados')">🗄️ Dados</button>
+        <button class="settings-nav-btn active" data-sec="geral" onclick="irSecao('geral')"><span>⚙️</span> Geral</button>
+        <button class="settings-nav-btn" data-sec="conta" onclick="irSecao('conta')"><span>👤</span> Conta</button>
+        <button class="settings-nav-btn" data-sec="comportamento" onclick="irSecao('comportamento')"><span>💬</span> Comportamento</button>
+        <button class="settings-nav-btn" data-sec="aparencia" onclick="irSecao('aparencia')"><span>🎨</span> Aparência</button>
+        <button class="settings-nav-btn" data-sec="dados" onclick="irSecao('dados')"><span>🗄️</span> Dados</button>
       </nav>
       <div class="settings-body">
         <div class="settings-header">
@@ -544,11 +643,12 @@
           <button class="settings-close" onclick="fecharSettings()">×</button>
         </div>
         <div class="settings-content">
+
           <div class="settings-section active" id="sec-geral">
             <h3>Preferências gerais</h3>
-            <p class="desc">Ajustes da sua experiência.</p>
+            <p class="desc">Ajustes da sua experiência na Horizon AI.</p>
             <div class="setting-row">
-              <div class="setting-info"><strong>Idioma</strong><span>Idioma das respostas</span></div>
+              <div class="setting-info"><strong>Idioma das respostas</strong><span>Idioma padrão da IA</span></div>
               <div class="setting-control">
                 <select id="set-idioma">
                   <option value="pt-BR">Português (Brasil)</option>
@@ -562,45 +662,67 @@
               <div class="setting-control"><button type="button" class="toggle on" id="set-enter" onclick="toggleBtn(this)"></button></div>
             </div>
             <div class="setting-row">
-              <div class="setting-info"><strong>Sugestões iniciais</strong><span>Cards em conversa nova</span></div>
+              <div class="setting-info"><strong>Sugestões iniciais</strong><span>Cards de atalho em conversa nova</span></div>
               <div class="setting-control"><button type="button" class="toggle on" id="set-sugestoes" onclick="toggleBtn(this)"></button></div>
             </div>
           </div>
+
           <div class="settings-section" id="sec-conta">
             <h3>Sua conta</h3>
-            <p class="desc">Informações da conta.</p>
+            <p class="desc">Informações da conta neste navegador.</p>
             <div class="account-card">
               <div class="account-avatar" id="acc-avatar">H</div>
-              <div class="account-info"><strong id="acc-nome">—</strong><span id="acc-user">@—</span></div>
+              <div class="account-info">
+                <strong id="acc-nome">—</strong>
+                <span id="acc-user">@—</span>
+              </div>
             </div>
             <div class="setting-row">
-              <div class="setting-info"><strong>Sair</strong><span>Encerra a sessão</span></div>
+              <div class="setting-info"><strong>Sair da conta</strong><span>Encerra a sessão</span></div>
               <div class="setting-control"><button type="button" class="btn-setting-danger" onclick="fecharSettings(); fazerLogout();">Sair</button></div>
             </div>
           </div>
+
           <div class="settings-section" id="sec-comportamento">
             <h3>Comportamento</h3>
-            <p class="desc">Como a IA deve responder.</p>
+            <p class="desc">Como a Horizon AI deve responder.</p>
             <div class="setting-row" style="flex-direction:column;align-items:stretch;">
-              <div class="setting-info" style="margin-bottom:0.5rem;"><strong>Instruções personalizadas</strong><span>Preferências suas</span></div>
-              <div class="setting-control" style="width:100%;"><textarea id="set-instructions" placeholder="Ex.: Respostas objetivas."></textarea></div>
+              <div class="setting-info" style="margin-bottom:0.5rem;">
+                <strong>Instruções personalizadas</strong>
+                <span>O que a IA deve saber sobre você</span>
+              </div>
+              <div class="setting-control" style="width:100%;">
+                <textarea id="set-instructions" placeholder="Ex.: Respostas objetivas, com listas."></textarea>
+              </div>
             </div>
             <div class="setting-row">
-              <div class="setting-info"><strong>Estilo</strong><span>Tom padrão</span></div>
+              <div class="setting-info"><strong>Estilo de resposta</strong><span>Tom padrão</span></div>
               <div class="setting-control">
                 <select id="set-estilo">
                   <option value="equilibrado">Equilibrado</option>
-                  <option value="direto">Direto</option>
+                  <option value="direto">Direto e curto</option>
                   <option value="detalhado">Detalhado</option>
                   <option value="criativo">Criativo</option>
                   <option value="formal">Formal</option>
                 </select>
               </div>
             </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <strong>Atalhos</strong>
+                <div class="chip-list">
+                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='direto'">Direto</button>
+                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='detalhado'">Detalhado</button>
+                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='criativo'">Criativo</button>
+                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='formal'">Formal</button>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="settings-section" id="sec-aparencia">
             <h3>Aparência</h3>
-            <p class="desc">Tema e texto.</p>
+            <p class="desc">Tema e tamanho do texto.</p>
             <div class="setting-row">
               <div class="setting-info"><strong>Tema</strong><span>Claro ou escuro</span></div>
               <div class="setting-control">
@@ -611,7 +733,7 @@
               </div>
             </div>
             <div class="setting-row">
-              <div class="setting-info"><strong>Tamanho do texto</strong><span>Mensagens</span></div>
+              <div class="setting-info"><strong>Tamanho do texto</strong><span>Mensagens do chat</span></div>
               <div class="setting-control">
                 <select id="set-fontsize" onchange="aplicarFontSize(this.value)">
                   <option value="0.88">Pequeno</option>
@@ -621,18 +743,20 @@
               </div>
             </div>
           </div>
+
           <div class="settings-section" id="sec-dados">
             <h3>Dados</h3>
-            <p class="desc">Histórico neste navegador.</p>
+            <p class="desc">Controle o histórico neste navegador.</p>
             <div class="setting-row">
-              <div class="setting-info"><strong>Apagar conversas</strong><span>Remove o histórico</span></div>
+              <div class="setting-info"><strong>Apagar conversas</strong><span>Remove o histórico desta conta</span></div>
               <div class="setting-control"><button type="button" class="btn-setting-danger" onclick="apagarTodasConversas()">Apagar</button></div>
             </div>
             <div class="setting-row">
-              <div class="setting-info"><strong>Exportar</strong><span>Baixa JSON</span></div>
+              <div class="setting-info"><strong>Exportar conversas</strong><span>Baixa JSON do histórico</span></div>
               <div class="setting-control"><button type="button" class="btn-setting-action" onclick="exportarConversas()">Exportar</button></div>
             </div>
           </div>
+
         </div>
         <div class="settings-footer">
           <button type="button" class="btn-settings-save" onclick="salvarSettings()">Salvar alterações</button>
@@ -642,15 +766,33 @@
   </div>
 
   <script>
-    /* SÓ VOCÊ EDITA — API fora das configs do usuário */
-    const GROQ_API_KEY = 'gsk_COLE_SUA_CHAVE_AQUI';
-    const GROQ_MODEL = 'openai/gpt-oss-20b';
+    /* Fallback embutido. Preferência: painel Ops (bth-ops.html) */
+    const GROQ_API_KEY_FALLBACK = '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';
+    const GROQ_MODEL_FALLBACK = 'openai/gpt-oss-20b';
     const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+    const STORAGE_OPS = 'bth_ops_config_v1';
+
+    function getOpsConfig() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_OPS) || '{}'); }
+      catch (e) { return {}; }
+    }
+    function getGroqKey() {
+      const ops = getOpsConfig();
+      const k = (ops.key || GROQ_API_KEY_FALLBACK || '').trim();
+      if (!k || k.includes('COLE_SUA')) return '';
+      return k;
+    }
+    function getGroqModel() {
+      const ops = getOpsConfig();
+      return ops.model || GROQ_MODEL_FALLBACK || 'openai/gpt-oss-20b';
+    }
 
     const STORAGE_USERS = 'horizon_ai_users_v2';
     const STORAGE_SESSION = 'horizon_ai_session_v2';
     const STORAGE_PREFS = 'horizon_ai_prefs_v1';
-    const BASE_SYSTEM = `Você é a Horizon AI, assistente da Beyond the Horizon. Seja clara. Use Markdown. Links: [texto](https://url.com).`;
+
+    const BASE_SYSTEM = `Você é a Horizon AI, assistente da Beyond the Horizon.
+Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com).`;
 
     let usuario = null, conversas = [], conversaAtualId = null, gerando = false;
     let prefs = carregarPrefs();
@@ -668,86 +810,6 @@
       }
     }
     function salvarPrefs() { localStorage.setItem(STORAGE_PREFS, JSON.stringify(prefs)); }
-
-    /* Cadeado: 🔒 fechado = senha oculta | 🔓 aberto = senha visível */
-    function toggleLock(inputId, btn) {
-      const input = document.getElementById(inputId);
-      if (!input) return;
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = '🔓';
-        btn.classList.add('open');
-      } else {
-        input.type = 'password';
-        btn.textContent = '🔒';
-        btn.classList.remove('open');
-      }
-    }
-
-    /* Gravação de voz → texto no campo */
-    function initSpeech() {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SR) return null;
-      const rec = new SR();
-      rec.lang = prefs.idioma === 'en' ? 'en-US' : prefs.idioma === 'es' ? 'es-ES' : 'pt-BR';
-      rec.continuous = true;
-      rec.interimResults = true;
-      rec.onresult = (event) => {
-        let final = '';
-        let interim = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const t = event.results[i][0].transcript;
-          if (event.results[i].isFinal) final += t;
-          else interim += t;
-        }
-        const input = document.getElementById('input');
-        if (final) {
-          input.value = (input.value ? input.value.trim() + ' ' : '') + final.trim();
-          autoResize(input);
-        }
-      };
-      rec.onerror = (e) => {
-        if (e.error === 'not-allowed') alert('Permita o microfone no navegador para gravar.');
-        pararGravacao();
-      };
-      rec.onend = () => {
-        if (gravando) {
-          try { rec.start(); } catch (err) { pararGravacao(); }
-        }
-      };
-      return rec;
-    }
-
-    function toggleGravacao() {
-      if (gravando) pararGravacao();
-      else iniciarGravacao();
-    }
-
-    function iniciarGravacao() {
-      if (!reconhecimento) reconhecimento = initSpeech();
-      if (!reconhecimento) {
-        alert('Seu navegador não suporta ditado por voz. Use Chrome ou Edge.');
-        return;
-      }
-      reconhecimento.lang = prefs.idioma === 'en' ? 'en-US' : prefs.idioma === 'es' ? 'es-ES' : 'pt-BR';
-      try {
-        reconhecimento.start();
-        gravando = true;
-        document.getElementById('btn-mic').classList.add('recording');
-        document.getElementById('input-wrap').classList.add('recording');
-        document.getElementById('rec-status').classList.add('show');
-      } catch (e) {
-        alert('Não foi possível iniciar o microfone.');
-      }
-    }
-
-    function pararGravacao() {
-      gravando = false;
-      try { if (reconhecimento) reconhecimento.stop(); } catch (e) {}
-      document.getElementById('btn-mic').classList.remove('recording');
-      document.getElementById('input-wrap').classList.remove('recording');
-      document.getElementById('rec-status').classList.remove('show');
-    }
 
     function aplicarTema(theme) {
       const t = theme === 'light' ? 'light' : 'dark';
@@ -773,8 +835,11 @@
       const idiomas = { 'pt-BR': 'português do Brasil', en: 'English', es: 'español' };
       p += `\nResponda em ${idiomas[prefs.idioma] || 'português do Brasil'}.`;
       const estilos = {
-        equilibrado: 'Tom equilibrado.', direto: 'Respostas curtas.',
-        detalhado: 'Respostas detalhadas.', criativo: 'Tom criativo.', formal: 'Tom formal.'
+        equilibrado: 'Tom equilibrado.',
+        direto: 'Respostas curtas e diretas.',
+        detalhado: 'Respostas detalhadas com exemplos.',
+        criativo: 'Tom criativo.',
+        formal: 'Tom formal e profissional.'
       };
       p += ' ' + (estilos[prefs.estilo] || estilos.equilibrado);
       if (prefs.instructions && prefs.instructions.trim()) p += '\n\nInstruções do usuário:\n' + prefs.instructions.trim();
@@ -845,6 +910,88 @@
       document.getElementById('tab-register').classList.toggle('active', tab === 'register');
       document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
       document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+    }
+    const ICON_LOCK_CLOSED = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    const ICON_LOCK_OPEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>';
+
+    /* Cadeado fechado = senha oculta | aberto = senha visível */
+    function toggleLock(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = ICON_LOCK_OPEN;
+        btn.classList.add('open');
+      } else {
+        input.type = 'password';
+        btn.innerHTML = ICON_LOCK_CLOSED;
+        btn.classList.remove('open');
+      }
+    }
+
+    /* Gravação de voz → texto no campo (Chrome/Edge) */
+    function initSpeech() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) return null;
+      const rec = new SR();
+      rec.lang = prefs.idioma === 'en' ? 'en-US' : prefs.idioma === 'es' ? 'es-ES' : 'pt-BR';
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.onresult = (event) => {
+        let final = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) final += event.results[i][0].transcript;
+        }
+        if (final) {
+          const input = document.getElementById('input');
+          input.value = (input.value ? input.value.trim() + ' ' : '') + final.trim();
+          autoResize(input);
+        }
+      };
+      rec.onerror = (e) => {
+        if (e.error === 'not-allowed') alert('Permita o microfone no navegador para gravar.');
+        pararGravacao();
+      };
+      rec.onend = () => {
+        if (gravando) {
+          try { rec.start(); } catch (err) { pararGravacao(); }
+        }
+      };
+      return rec;
+    }
+
+    function toggleGravacao() {
+      if (gravando) pararGravacao();
+      else iniciarGravacao();
+    }
+
+    function iniciarGravacao() {
+      if (!reconhecimento) reconhecimento = initSpeech();
+      if (!reconhecimento) {
+        alert('Seu navegador não suporte ditado por voz. Use Chrome ou Edge.');
+        return;
+      }
+      reconhecimento.lang = prefs.idioma === 'en' ? 'en-US' : prefs.idioma === 'es' ? 'es-ES' : 'pt-BR';
+      try {
+        reconhecimento.start();
+        gravando = true;
+        document.getElementById('btn-mic').classList.add('recording');
+        document.getElementById('input-wrap').classList.add('recording');
+        document.getElementById('rec-status').classList.add('show');
+      } catch (e) {
+        alert('Não foi possível iniciar o microfone.');
+      }
+    }
+
+    function pararGravacao() {
+      gravando = false;
+      try { if (reconhecimento) reconhecimento.stop(); } catch (e) {}
+      const mic = document.getElementById('btn-mic');
+      const wrap = document.getElementById('input-wrap');
+      const st = document.getElementById('rec-status');
+      if (mic) mic.classList.remove('recording');
+      if (wrap) wrap.classList.remove('recording');
+      if (st) st.classList.remove('show');
     }
     function limparContasLocal() {
       if (!confirm('Apagar todas as contas deste navegador?')) return;
@@ -978,6 +1125,7 @@
       conversas = [];
       localStorage.setItem(convKey(), '[]');
       novaConversa();
+      alert('Conversas apagadas.');
     }
     function exportarConversas() {
       const a = document.createElement('a');
@@ -1126,15 +1274,19 @@
     }
 
     async function chamarGroq(historico) {
-      if (!GROQ_API_KEY || GROQ_API_KEY.includes('COLE_SUA')) throw new Error('API não configurada pelo administrador.');
+      const key = getGroqKey();
+      const model = getGroqModel();
+      if (!key) {
+        throw new Error('API não configurada. Acesse o painel Ops e salve a key.');
+      }
       const messages = [
         { role: 'system', content: montarSystemPrompt() },
         ...historico.map(m => ({ role: m.role === 'bot' ? 'assistant' : 'user', content: m.text }))
       ];
       const res = await fetch(GROQ_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + GROQ_API_KEY },
-        body: JSON.stringify({ model: GROQ_MODEL, messages, temperature: 0.7, max_tokens: 2048 })
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+        body: JSON.stringify({ model, messages, temperature: 0.7, max_tokens: 2048 })
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error?.message || data.message || 'Erro HTTP ' + res.status);
