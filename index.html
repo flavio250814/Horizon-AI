@@ -3,850 +3,234 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Horizon AI | Beyond the Horizon</title>
+  <title>Ops · Beyond the Horizon</title>
+  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root, [data-theme="dark"] {
+    :root {
       --bg: #050B1A;
-      --bg-elevated: #0A1A3A;
-      --bg-soft: rgba(10, 26, 58, 0.85);
-      --bg-input: rgba(5, 11, 26, 0.75);
-      --bg-sidebar: rgba(8, 16, 35, 0.95);
-      --bg-header: rgba(5, 11, 26, 0.95);
-      --bg-msg-code: rgba(5, 11, 26, 0.85);
+      --panel: #0A1A3A;
+      --input: rgba(5, 11, 26, 0.75);
       --text: #FFFFFF;
-      --text-muted: #A8B8D0;
+      --muted: #A8B8D0;
       --border: rgba(0, 123, 255, 0.22);
-      --border-soft: rgba(0, 123, 255, 0.12);
       --cyan: #00D1B2;
       --blue: #007BFF;
-      --gradient: linear-gradient(135deg, #007BFF, #00D1B2);
       --danger: #ff4d6d;
-      --shadow: 0 20px 60px rgba(0,0,0,0.45);
-      --msg-size: 0.95rem;
-      --user-avatar-bg: rgba(0, 123, 255, 0.2);
-      --suggest-bg: rgba(10, 26, 58, 0.6);
-      --toggle-off: rgba(168, 184, 208, 0.3);
-      --rec: #ff4d6d;
+      --gradient: linear-gradient(135deg, #007BFF, #00D1B2);
     }
-
-    [data-theme="light"] {
-      --bg: #F4F7FC;
-      --bg-elevated: #FFFFFF;
-      --bg-soft: rgba(255, 255, 255, 0.95);
-      --bg-input: #F0F4FA;
-      --bg-sidebar: #FFFFFF;
-      --bg-header: rgba(255, 255, 255, 0.95);
-      --bg-msg-code: #E8EEF8;
-      --text: #0B1529;
-      --text-muted: #5A6A85;
-      --border: rgba(0, 90, 200, 0.18);
-      --border-soft: rgba(0, 90, 200, 0.1);
-      --cyan: #00A896;
-      --blue: #0066E0;
-      --gradient: linear-gradient(135deg, #0066E0, #00A896);
-      --danger: #E11D48;
-      --shadow: 0 20px 50px rgba(15, 40, 80, 0.12);
-      --user-avatar-bg: rgba(0, 102, 224, 0.12);
-      --suggest-bg: #FFFFFF;
-      --toggle-off: rgba(90, 106, 133, 0.25);
-      --rec: #E11D48;
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Montserrat', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      overflow-x: hidden;
-      transition: background 0.25s, color 0.25s;
     }
-
-    /* AUTH */
-    #auth-screen {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      padding: 1.5rem; position: relative; overflow: hidden;
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
     }
-    #auth-screen.hidden { display: none; }
-    .auth-stars {
-      position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
-      background-image:
-        radial-gradient(1.5px 1.5px at 20% 30%, rgba(128,160,255,0.5), transparent),
-        radial-gradient(1px 1px at 60% 70%, rgba(128,160,255,0.35), transparent);
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 0.35rem;
     }
-    [data-theme="light"] .auth-stars { opacity: 0.25; }
-    .auth-glow {
-      position: absolute; width: 420px; height: 420px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,123,255,0.15) 0%, transparent 70%);
-      top: 50%; left: 50%; transform: translate(-50%, -50%);
-    }
-    .auth-box {
-      position: relative; z-index: 2; width: 100%; max-width: 400px;
-      background: var(--bg-soft); border: 1px solid var(--border);
-      border-radius: 20px; padding: 2rem 1.75rem; box-shadow: var(--shadow);
-    }
-    .auth-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 0.5rem; }
-    .auth-logo img { height: 40px; border-radius: 8px; }
-    .auth-logo span {
-      font-size: 1.25rem; font-weight: 800; background: var(--gradient);
+    .brand img { height: 32px; border-radius: 7px; }
+    .brand span {
+      font-weight: 800; font-size: 1.05rem;
+      background: var(--gradient);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .auth-sub { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
-    .auth-tabs {
-      display: flex; gap: 0.4rem; margin-bottom: 1.3rem;
-      background: var(--bg-input); border-radius: 12px; padding: 4px;
+    .sub {
+      color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem;
     }
-    .auth-tab {
-      flex: 1; padding: 0.55rem; border: none; border-radius: 10px;
-      background: transparent; color: var(--text-muted);
-      font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    .badge {
+      display: inline-flex; padding: 0.3rem 0.7rem; border-radius: 50px;
+      font-size: 0.72rem; font-weight: 600;
+      background: rgba(255, 77, 109, 0.12);
+      border: 1px solid rgba(255, 77, 109, 0.3);
+      color: var(--danger); margin-bottom: 1.2rem;
     }
-    .auth-tab.active { background: var(--gradient); color: white; }
-    .auth-field { margin-bottom: 0.9rem; }
-    .auth-field label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-    .auth-field input {
-      width: 100%; padding: 0.8rem 1rem; background: var(--bg-input);
-      border: 1px solid var(--border); border-radius: 12px; color: var(--text);
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .card h2 {
+      font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem;
+    }
+    .card p {
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.45;
+    }
+    label {
+      display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem;
+    }
+    input, select, textarea {
+      width: 100%; padding: 0.8rem 1rem;
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text);
       font-family: 'Montserrat', sans-serif; font-size: 0.9rem; outline: none;
+      margin-bottom: 0.9rem;
     }
-    .auth-field input:focus { border-color: var(--blue); }
-    .auth-error, .auth-ok {
-      display: none; font-size: 0.8rem; padding: 0.6rem 0.8rem; border-radius: 10px; margin-bottom: 0.9rem;
+    input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+    textarea { min-height: 90px; resize: vertical; }
+    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .btn {
+      padding: 0.75rem 1.1rem; border: none; border-radius: 12px;
+      font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer;
     }
-    .auth-error { background: rgba(255,77,109,0.12); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); }
-    .auth-ok { background: rgba(0,209,178,0.12); border: 1px solid rgba(0,209,178,0.3); color: var(--cyan); }
-    .auth-error.show, .auth-ok.show { display: block; }
-    .auth-btn {
-      width: 100%; padding: 0.9rem; border: none; border-radius: 12px; background: var(--gradient);
-      color: white; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+    .btn-primary { background: var(--gradient); color: white; }
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
     }
-    .auth-link {
-      display: block; width: 100%; margin-top: 0.7rem; background: none; border: none;
-      color: var(--text-muted); font-family: 'Montserrat', sans-serif; font-size: 0.75rem;
-      cursor: pointer; text-decoration: underline;
-    }
-    .auth-hint { text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 1rem; opacity: 0.7; }
-    .pass-wrap { position: relative; }
-    .pass-wrap input { padding-right: 3rem; }
-    .btn-lock {
-      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-      width: 36px; height: 36px; border: none; border-radius: 10px;
-      background: transparent; color: var(--text-muted); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s, color 0.15s;
-    }
-    .btn-lock svg {
-      width: 18px; height: 18px;
-      stroke: currentColor; fill: none;
-      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
-    }
-    .btn-lock:hover { background: rgba(0, 123, 255, 0.12); color: var(--blue); }
-    .btn-lock.open { color: var(--cyan); }
-
-    /* APP */
-    #app { display: none; height: 100vh; flex-direction: column; }
-    #app.active { display: flex; }
-    .app-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.85rem 1.2rem; background: var(--bg-header);
-      border-bottom: 1px solid var(--border-soft); backdrop-filter: blur(12px); flex-shrink: 0;
-    }
-    .app-header-left { display: flex; align-items: center; gap: 12px; }
-    .btn-menu {
-      background: none; border: none; color: var(--text-muted); font-size: 1.3rem;
-      cursor: pointer; padding: 4px 8px; display: none;
-    }
-    .app-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.95rem; }
-    .app-logo img { height: 28px; border-radius: 6px; }
-    .app-logo span {
-      background: var(--gradient); -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .user-chip { font-size: 0.75rem; color: var(--text-muted); max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .header-actions { display: flex; gap: 0.45rem; align-items: center; }
-    .btn-header {
-      padding: 0.45rem 0.85rem; border-radius: 10px;
-      font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600;
-      cursor: pointer; border: 1px solid transparent;
-    }
-    .btn-new-chat { background: rgba(0, 123, 255, 0.12); border-color: var(--border); color: var(--blue); }
-    .btn-settings { background: rgba(0, 209, 178, 0.1); border-color: rgba(0, 209, 178, 0.25); color: var(--cyan); }
-    .btn-logout { background: transparent; border-color: rgba(255, 77, 109, 0.3); color: var(--danger); }
-    .btn-theme {
-      background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);
-      width: 38px; height: 34px; border-radius: 10px; cursor: pointer; font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .app-body { flex: 1; display: flex; overflow: hidden; }
-    .sidebar {
-      width: 280px; background: var(--bg-sidebar);
-      border-right: 1px solid var(--border-soft);
-      display: flex; flex-direction: column; flex-shrink: 0;
-    }
-    .sidebar-top { padding: 1rem; border-bottom: 1px solid var(--border-soft); }
-    .btn-sidebar-new {
-      width: 100%; padding: 0.7rem; background: var(--gradient); border: none;
-      border-radius: 10px; color: white; font-family: 'Montserrat', sans-serif;
-      font-weight: 600; font-size: 0.85rem; cursor: pointer;
-    }
-    .conversations { flex: 1; overflow-y: auto; padding: 0.75rem; }
-    .conv-item {
-      display: flex; align-items: center; gap: 6px;
-      padding: 0.55rem 0.5rem 0.55rem 0.75rem; border-radius: 10px; margin-bottom: 0.3rem;
-    }
-    .conv-item:hover, .conv-item.active { background: rgba(0, 123, 255, 0.1); }
-    .conv-item.active .conv-title { color: var(--text); }
-    .conv-title {
-      flex: 1; min-width: 0; font-size: 0.85rem; color: var(--text-muted);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;
-    }
-    .btn-del-conv {
-      flex-shrink: 0; width: 28px; height: 28px; border: none; border-radius: 8px;
-      background: transparent; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; opacity: 0.5;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .conv-item:hover .btn-del-conv { opacity: 1; }
-    .btn-del-conv:hover { background: rgba(255, 77, 109, 0.15); color: var(--danger); }
-    .sidebar-footer {
-      padding: 1rem; border-top: 1px solid var(--border-soft);
-      font-size: 0.75rem; color: var(--text-muted); text-align: center; opacity: 0.7;
-    }
-
-    .chat-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-    .messages {
-      flex: 1; overflow-y: auto; padding: 1.5rem 1.5rem 1rem;
-      display: flex; flex-direction: column; gap: 1.2rem;
+    .btn-danger {
+      background: rgba(255, 77, 109, 0.12);
+      border: 1px solid rgba(255, 77, 109, 0.35);
+      color: var(--danger);
     }
     .msg {
-      display: flex; gap: 12px; max-width: 780px; width: 100%;
-      margin: 0 auto; animation: msgIn 0.35s ease both;
+      display: none; padding: 0.7rem 0.9rem; border-radius: 10px;
+      font-size: 0.8rem; margin-bottom: 1rem;
     }
-    @keyframes msgIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .msg.show { display: block; }
+    .msg.ok {
+      background: rgba(0, 209, 178, 0.12);
+      border: 1px solid rgba(0, 209, 178, 0.3); color: var(--cyan);
     }
-    .msg-avatar {
-      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem; font-weight: 700;
-    }
-    .msg.user .msg-avatar { background: var(--user-avatar-bg); color: var(--blue); }
-    .msg.bot .msg-avatar { background: var(--gradient); color: white; font-size: 0.7rem; }
-    .msg-content { flex: 1; padding-top: 2px; min-width: 0; }
-    .msg-content .md {
-      font-size: var(--msg-size); line-height: 1.7; color: var(--text); word-wrap: break-word;
-    }
-    .msg.user .msg-content .md { color: var(--text-muted); white-space: pre-wrap; }
-    .msg-content .md p { margin: 0 0 0.75rem; }
-    .msg-content .md p:last-child { margin-bottom: 0; }
-    .msg-content .md h1, .msg-content .md h2, .msg-content .md h3 {
-      font-weight: 700; margin: 1rem 0 0.5rem; color: var(--text);
-    }
-    .msg-content .md h2 { font-size: 1.1rem; }
-    .msg-content .md h3 { font-size: 1rem; color: var(--cyan); }
-    .msg-content .md strong { font-weight: 700; color: var(--text); }
-    .msg-content .md ul, .msg-content .md ol { margin: 0.4rem 0 0.85rem; padding-left: 1.4rem; }
-    .msg-content .md a { color: var(--cyan); text-decoration: underline; cursor: pointer; }
-    .msg-content .md code {
-      font-family: ui-monospace, Consolas, monospace; font-size: 0.86em;
-      background: rgba(0, 123, 255, 0.1); border-radius: 6px; padding: 0.1em 0.4em; color: var(--cyan);
-    }
-    .msg-content .md pre {
-      background: var(--bg-msg-code); border: 1px solid var(--border-soft);
-      border-radius: 12px; padding: 0.9rem 1rem; overflow-x: auto; margin: 0.6rem 0 0.9rem;
-    }
-    .msg-content .md pre code { background: none; color: var(--text); }
-    .msg-content .error-msg { color: var(--danger); white-space: pre-wrap; }
-
-    .welcome {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 2rem; max-width: 640px; margin: 0 auto;
-    }
-    .welcome h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .welcome h2 span {
-      background: var(--gradient); -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .welcome p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; }
-    .suggestions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; }
-    .suggestion {
-      padding: 1rem; background: var(--suggest-bg);
-      border: 1px solid var(--border); border-radius: 14px;
-      text-align: left; cursor: pointer; font-family: 'Montserrat', sans-serif; color: var(--text);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .suggestion:hover { border-color: var(--blue); }
-    .suggestion strong { display: block; font-size: 0.85rem; margin-bottom: 0.25rem; }
-    .suggestion span { font-size: 0.78rem; color: var(--text-muted); }
-
-    .input-area { padding: 1rem 1.5rem 1.4rem; flex-shrink: 0; }
-    .input-wrap {
-      max-width: 780px; margin: 0 auto; display: flex; gap: 0.5rem; align-items: flex-end;
-      background: var(--bg-elevated); border: 1px solid var(--border);
-      border-radius: 16px; padding: 0.55rem 0.6rem 0.55rem 1rem;
-    }
-    .input-wrap:focus-within {
-      border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
-    }
-    .input-wrap.recording {
-      border-color: var(--rec);
-      box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.2);
-    }
-    .input-wrap textarea {
-      flex: 1; background: none; border: none; outline: none; color: var(--text);
-      font-family: 'Montserrat', sans-serif; font-size: 0.95rem;
-      resize: none; max-height: 140px; line-height: 1.5; padding: 0.45rem 0;
-    }
-    .input-wrap textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
-    .btn-mic, .btn-send {
-      width: 42px; height: 42px; border-radius: 12px; border: none;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: transform 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
-    }
-    .btn-mic {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid transparent;
-    }
-    .btn-mic svg {
-      width: 20px; height: 20px;
-      display: block;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.75;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .btn-mic:hover {
-      background: rgba(0, 123, 255, 0.1);
-      color: var(--blue);
-    }
-    .btn-mic.recording {
+    .msg.err {
       background: rgba(255, 77, 109, 0.12);
-      color: var(--rec);
-      border-color: rgba(255, 77, 109, 0.35);
-      box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.12);
-      animation: pulseRec 1.4s ease-in-out infinite;
+      border: 1px solid rgba(255, 77, 109, 0.3); color: var(--danger);
     }
-    .btn-mic.recording svg {
-      fill: currentColor;
-      stroke: currentColor;
+    .status-line {
+      font-size: 0.8rem; color: var(--muted);
+      display: flex; align-items: center; gap: 8px; margin-top: 0.3rem;
     }
-    @keyframes pulseRec {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.04); }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--danger);
     }
-    .btn-send { background: var(--gradient); color: white; }
-    .btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-send svg {
-      width: 18px; height: 18px;
-      display: block;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .dot.on { background: var(--cyan); }
+    #gate, #panel { display: none; }
+    #gate.show, #panel.show { display: block; }
+    .pass-wrap { position: relative; }
+    .pass-wrap input { padding-right: 3rem; margin-bottom: 0.9rem; }
+    .btn-lock {
+      position: absolute; right: 8px; top: 34px;
+      width: 36px; height: 36px; border: none; border-radius: 10px;
+      background: transparent; color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
     }
-    .input-hint { text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-top: 0.6rem; opacity: 0.75; }
-    .rec-status {
-      display: none; text-align: center; font-size: 0.78rem; color: var(--rec);
-      font-weight: 600; margin-top: 0.45rem; align-items: center; justify-content: center; gap: 6px;
+    .btn-lock svg {
+      width: 18px; height: 18px; stroke: currentColor; fill: none;
+      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
     }
-    .rec-status.show { display: flex; }
-    .rec-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--rec);
-      animation: blink 1s infinite;
+    .hint {
+      font-size: 0.72rem; color: var(--muted); opacity: 0.75; margin-top: 1.2rem; line-height: 1.5;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    .typing { display: flex; gap: 5px; padding: 4px 0; }
-    .typing span {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--cyan); animation: bounce 1.2s infinite;
-    }
-    .typing span:nth-child(2) { animation-delay: 0.15s; }
-    .typing span:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    /* SETTINGS */
-    .settings-overlay {
-      display: none; position: fixed; inset: 0; z-index: 3000;
-      background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(4px);
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .settings-overlay.open { display: flex; }
-    .settings-panel {
-      width: 100%; max-width: 720px; max-height: 90vh;
-      background: var(--bg-elevated); border: 1px solid var(--border);
-      border-radius: 18px; display: flex; overflow: hidden; box-shadow: var(--shadow);
-    }
-    .settings-nav {
-      width: 200px; flex-shrink: 0; background: var(--bg-input);
-      border-right: 1px solid var(--border-soft); padding: 1.2rem 0.7rem;
-      display: flex; flex-direction: column; gap: 0.25rem;
-    }
-    .settings-nav-title {
-      font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;
-      letter-spacing: 0.06em; padding: 0.4rem 0.75rem 0.7rem; font-weight: 600;
-    }
-    .settings-nav-btn {
-      display: flex; align-items: center; gap: 10px; width: 100%;
-      padding: 0.65rem 0.75rem; border: none; border-radius: 10px;
-      background: transparent; color: var(--text-muted); text-align: left;
-      font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer;
-    }
-    .settings-nav-btn:hover { background: rgba(0, 123, 255, 0.08); color: var(--text); }
-    .settings-nav-btn.active { background: rgba(0, 123, 255, 0.14); color: var(--text); }
-    .settings-body { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-    .settings-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border-soft);
-    }
-    .settings-header h2 { font-size: 1.1rem; font-weight: 700; }
-    .settings-close {
-      background: none; border: none; color: var(--text-muted); font-size: 1.4rem;
-      cursor: pointer; padding: 4px 8px; border-radius: 8px;
-    }
-    .settings-content { flex: 1; overflow-y: auto; padding: 1.3rem 1.4rem 1.6rem; }
-    .settings-section { display: none; }
-    .settings-section.active { display: block; }
-    .settings-section h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; }
-    .settings-section .desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.45; }
-    .setting-row {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border-soft);
-    }
-    .setting-row:last-child { border-bottom: none; }
-    .setting-info { flex: 1; min-width: 0; }
-    .setting-info strong { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 0.15rem; }
-    .setting-info span { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
-    .setting-control select, .setting-control input[type="text"] {
-      padding: 0.5rem 0.75rem; background: var(--bg-input);
-      border: 1px solid var(--border); border-radius: 10px;
-      color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 0.82rem;
-      outline: none; min-width: 160px;
-    }
-    .setting-control textarea {
-      width: 100%; min-height: 100px; padding: 0.75rem;
-      background: var(--bg-input); border: 1px solid var(--border);
-      border-radius: 12px; color: var(--text); font-family: 'Montserrat', sans-serif;
-      font-size: 0.85rem; outline: none; resize: vertical; line-height: 1.5;
-    }
-    .toggle {
-      width: 44px; height: 24px; border-radius: 12px; border: none;
-      background: var(--toggle-off); cursor: pointer; position: relative; transition: background 0.2s;
-    }
-    .toggle.on { background: var(--blue); }
-    .toggle::after {
-      content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%;
-      background: white; top: 3px; left: 3px; transition: transform 0.2s;
-    }
-    .toggle.on::after { transform: translateX(20px); }
-    .theme-pills { display: flex; gap: 0.4rem; }
-    .theme-pill {
-      padding: 0.45rem 0.85rem; border-radius: 10px; border: 1px solid var(--border);
-      background: var(--bg-input); color: var(--text-muted);
-      font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer;
-    }
-    .theme-pill.active { background: var(--gradient); color: white; border-color: transparent; }
-    .btn-setting-action {
-      padding: 0.5rem 0.9rem; border-radius: 10px; border: 1px solid var(--border);
-      background: rgba(0, 123, 255, 0.1); color: var(--blue);
-      font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer;
-    }
-    .btn-setting-danger {
-      padding: 0.5rem 0.9rem; border-radius: 10px;
-      border: 1px solid rgba(255, 77, 109, 0.35);
-      background: rgba(255, 77, 109, 0.1); color: var(--danger);
-      font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer;
-    }
-    .settings-footer {
-      padding: 0.9rem 1.4rem; border-top: 1px solid var(--border-soft);
-      display: flex; justify-content: flex-end;
-    }
-    .btn-settings-save {
-      padding: 0.6rem 1.2rem; border: none; border-radius: 10px;
-      background: var(--gradient); color: white;
-      font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.85rem; cursor: pointer;
-    }
-    .account-card {
-      display: flex; align-items: center; gap: 12px; padding: 1rem;
-      background: rgba(0, 123, 255, 0.08); border: 1px solid var(--border-soft);
-      border-radius: 14px; margin-bottom: 1rem;
-    }
-    .account-avatar {
-      width: 44px; height: 44px; border-radius: 12px; background: var(--gradient);
-      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; color: white;
-    }
-    .account-info strong { display: block; font-size: 0.95rem; }
-    .account-info span { font-size: 0.78rem; color: var(--text-muted); }
-    .chip-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
-    .chip {
-      padding: 0.35rem 0.7rem; border-radius: 50px; font-size: 0.75rem;
-      background: rgba(0, 123, 255, 0.1); border: 1px solid var(--border);
-      color: var(--text-muted); cursor: pointer;
-    }
-    .chip:hover { border-color: var(--cyan); color: var(--cyan); }
-    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 40; }
-    .overlay.open { display: block; }
-
-    @media (max-width: 700px) {
-      .settings-panel { flex-direction: column; max-height: 92vh; }
-      .settings-nav {
-        width: 100%; flex-direction: row; overflow-x: auto; padding: 0.6rem;
-        border-right: none; border-bottom: 1px solid var(--border-soft);
-      }
-      .settings-nav-title { display: none; }
-      .settings-nav-btn { white-space: nowrap; flex-shrink: 0; }
-      .setting-row { flex-direction: column; align-items: flex-start; }
-      .setting-control select { min-width: 100%; width: 100%; }
-    }
-    @media (max-width: 768px) {
-      .btn-menu { display: block; }
-      .sidebar {
-        position: fixed; left: 0; top: 0; bottom: 0; z-index: 50;
-        transform: translateX(-100%); transition: transform 0.3s ease;
-      }
-      .sidebar.open { transform: translateX(0); }
-      .suggestions { grid-template-columns: 1fr; }
-      .user-chip { display: none; }
-      .btn-del-conv { opacity: 1; }
-    }
+    a.link { color: var(--cyan); }
   </style>
 </head>
 <body>
-
-  <div id="auth-screen">
-    <div class="auth-stars"></div>
-    <div class="auth-glow"></div>
-    <div class="auth-box">
-      <div class="auth-logo"><img src="logo.png" alt="Logo"><span>Horizon AI</span></div>
-      <p class="auth-sub">Entre ou crie sua conta</p>
-      <div class="auth-tabs">
-        <button type="button" class="auth-tab active" id="tab-login" onclick="trocarAuthTab('login')">Entrar</button>
-        <button type="button" class="auth-tab" id="tab-register" onclick="trocarAuthTab('register')">Criar conta</button>
-      </div>
-      <div class="auth-error" id="auth-error"></div>
-      <div class="auth-ok" id="auth-ok"></div>
-      <div id="form-login">
-        <div class="auth-field"><label>Usuário</label><input type="text" id="login-user" autocomplete="username"></div>
-        <div class="auth-field">
-          <label>Senha</label>
-          <div class="pass-wrap">
-            <input type="password" id="login-pass" autocomplete="current-password">
-            <button type="button" class="btn-lock" onclick="toggleLock('login-pass', this)" aria-label="Mostrar ou ocultar senha">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-            </button>
-          </div>
-        </div>
-        <button type="button" class="auth-btn" onclick="fazerLogin()">Entrar</button>
-      </div>
-      <div id="form-register" style="display:none;">
-        <div class="auth-field"><label>Nome</label><input type="text" id="reg-nome"></div>
-        <div class="auth-field"><label>Usuário</label><input type="text" id="reg-user"></div>
-        <div class="auth-field">
-          <label>Senha</label>
-          <div class="pass-wrap">
-            <input type="password" id="reg-pass">
-            <button type="button" class="btn-lock" onclick="toggleLock('reg-pass', this)" aria-label="Mostrar ou ocultar senha">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="auth-field">
-          <label>Confirmar senha</label>
-          <div class="pass-wrap">
-            <input type="password" id="reg-pass2">
-            <button type="button" class="btn-lock" onclick="toggleLock('reg-pass2', this)" aria-label="Mostrar ou ocultar senha">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-            </button>
-          </div>
-        </div>
-        <button type="button" class="auth-btn" onclick="fazerCadastro()">Criar conta</button>
-      </div>
-      <button type="button" class="auth-link" onclick="limparContasLocal()">Limpar contas deste navegador</button>
-      <p class="auth-hint">Beyond the Horizon</p>
+  <div class="wrap">
+    <div class="brand">
+      <img src="logo.png" alt="Logo">
+      <span>Beyond the Horizon · Ops</span>
     </div>
-  </div>
+    <p class="sub">Painel interno — não linkar no site público</p>
+    <div class="badge">Área restrita · noindex</div>
 
-  <div id="app">
-    <div class="overlay" id="overlay" onclick="fecharSidebar()"></div>
-    <header class="app-header">
-      <div class="app-header-left">
-        <button class="btn-menu" onclick="abrirSidebar()">☰</button>
-        <div class="app-logo"><img src="logo.png" alt="Logo"><span>Horizon AI</span></div>
-        <span class="user-chip" id="user-chip"></span>
-      </div>
-      <div class="header-actions">
-        <button class="btn-theme" id="btn-theme" onclick="alternarTema()" title="Tema">🌙</button>
-        <button class="btn-header btn-settings" onclick="abrirSettings()">⚙ Configurações</button>
-        <button class="btn-header btn-new-chat" onclick="novaConversa()">+ Nova</button>
-        <button class="btn-header btn-logout" onclick="fazerLogout()">Sair</button>
-      </div>
-    </header>
-    <div class="app-body">
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-top">
-          <button class="btn-sidebar-new" onclick="novaConversa(); fecharSidebar();">+ Nova conversa</button>
+    <div class="msg" id="msg"></div>
+
+    <!-- LOGIN -->
+    <div id="gate">
+      <div class="card">
+        <h2>Acesso</h2>
+        <p>Digite a senha de operações para continuar.</p>
+        <div class="pass-wrap">
+          <label>Senha</label>
+          <input type="password" id="ops-pass" placeholder="Senha do painel" autocomplete="current-password">
+          <button type="button" class="btn-lock" onclick="togglePass()" aria-label="Mostrar senha">
+            <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          </button>
         </div>
-        <div class="conversations" id="conversations"></div>
-        <div class="sidebar-footer">Horizon AI · Beyond the Horizon</div>
-      </aside>
-      <div class="chat-area">
-        <div class="messages" id="messages"></div>
-        <div class="input-area">
-          <div class="input-wrap" id="input-wrap">
-            <textarea id="input" rows="1" placeholder="Mensagem para a Horizon AI..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-            <button type="button" class="btn-mic" id="btn-mic" onclick="toggleGravacao()" aria-label="Gravar áudio">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2a3.5 3.5 0 0 0-3.5 3.5v6a3.5 3.5 0 0 0 7 0v-6A3.5 3.5 0 0 0 12 2z"/>
-                <path d="M6.5 11.5a5.5 5.5 0 0 0 11 0"/>
-                <path d="M12 17v4"/>
-                <path d="M9 21h6"/>
-              </svg>
-            </button>
-            <button type="button" class="btn-send" id="btn-send" onclick="enviar()" aria-label="Enviar">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12h14"/>
-                <path d="M13 6l6 6-6 6"/>
-              </svg>
-            </button>
-          </div>
-          <div class="rec-status" id="rec-status"><span class="rec-dot"></span> Gravando… fale agora</div>
-          <div class="input-hint">Toque no microfone para falar · Horizon AI pode errar</div>
-        </div>
+        <button type="button" class="btn btn-primary" onclick="entrar()">Entrar</button>
       </div>
+      <p class="hint">
+        URL secreta (não divulgue): <code>/bth-ops.html</code><br>
+        Senha padrão na primeira vez: <code>horizon-ops-2026</code> — troque depois de entrar.
+      </p>
     </div>
-  </div>
 
-  <div class="settings-overlay" id="settings-overlay" onclick="if(event.target===this)fecharSettings()">
-    <div class="settings-panel" onclick="event.stopPropagation()">
-      <nav class="settings-nav">
-        <div class="settings-nav-title">Configurações</div>
-        <button class="settings-nav-btn active" data-sec="geral" onclick="irSecao('geral')"><span>⚙️</span> Geral</button>
-        <button class="settings-nav-btn" data-sec="conta" onclick="irSecao('conta')"><span>👤</span> Conta</button>
-        <button class="settings-nav-btn" data-sec="comportamento" onclick="irSecao('comportamento')"><span>💬</span> Comportamento</button>
-        <button class="settings-nav-btn" data-sec="aparencia" onclick="irSecao('aparencia')"><span>🎨</span> Aparência</button>
-        <button class="settings-nav-btn" data-sec="dados" onclick="irSecao('dados')"><span>🗄️</span> Dados</button>
-      </nav>
-      <div class="settings-body">
-        <div class="settings-header">
-          <h2 id="settings-title">Geral</h2>
-          <button class="settings-close" onclick="fecharSettings()">×</button>
+    <!-- PAINEL -->
+    <div id="panel">
+      <div class="card">
+        <h2>API Groq</h2>
+        <p>A key fica salva só neste navegador e é lida pelo Horizon AI. Não aparece nas configurações públicas.</p>
+
+        <label>API Key</label>
+        <input type="password" id="api-key" placeholder="gsk_...">
+
+        <label>Modelo</label>
+        <select id="api-model">
+          <option value="openai/gpt-oss-20b">GPT-OSS 20B (rápido)</option>
+          <option value="openai/gpt-oss-120b">GPT-OSS 120B (mais capaz)</option>
+        </select>
+
+        <div class="status-line">
+          <span class="dot" id="api-dot"></span>
+          <span id="api-status">API não configurada</span>
         </div>
-        <div class="settings-content">
 
-          <div class="settings-section active" id="sec-geral">
-            <h3>Preferências gerais</h3>
-            <p class="desc">Ajustes da sua experiência na Horizon AI.</p>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Idioma das respostas</strong><span>Idioma padrão da IA</span></div>
-              <div class="setting-control">
-                <select id="set-idioma">
-                  <option value="pt-BR">Português (Brasil)</option>
-                  <option value="en">English</option>
-                  <option value="es">Español</option>
-                </select>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Enviar com Enter</strong><span>Enter envia · Shift+Enter quebra linha</span></div>
-              <div class="setting-control"><button type="button" class="toggle on" id="set-enter" onclick="toggleBtn(this)"></button></div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Sugestões iniciais</strong><span>Cards de atalho em conversa nova</span></div>
-              <div class="setting-control"><button type="button" class="toggle on" id="set-sugestoes" onclick="toggleBtn(this)"></button></div>
-            </div>
-          </div>
-
-          <div class="settings-section" id="sec-conta">
-            <h3>Sua conta</h3>
-            <p class="desc">Informações da conta neste navegador.</p>
-            <div class="account-card">
-              <div class="account-avatar" id="acc-avatar">H</div>
-              <div class="account-info">
-                <strong id="acc-nome">—</strong>
-                <span id="acc-user">@—</span>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Sair da conta</strong><span>Encerra a sessão</span></div>
-              <div class="setting-control"><button type="button" class="btn-setting-danger" onclick="fecharSettings(); fazerLogout();">Sair</button></div>
-            </div>
-          </div>
-
-          <div class="settings-section" id="sec-comportamento">
-            <h3>Comportamento</h3>
-            <p class="desc">Como a Horizon AI deve responder.</p>
-            <div class="setting-row" style="flex-direction:column;align-items:stretch;">
-              <div class="setting-info" style="margin-bottom:0.5rem;">
-                <strong>Instruções personalizadas</strong>
-                <span>O que a IA deve saber sobre você</span>
-              </div>
-              <div class="setting-control" style="width:100%;">
-                <textarea id="set-instructions" placeholder="Ex.: Respostas objetivas, com listas."></textarea>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Estilo de resposta</strong><span>Tom padrão</span></div>
-              <div class="setting-control">
-                <select id="set-estilo">
-                  <option value="equilibrado">Equilibrado</option>
-                  <option value="direto">Direto e curto</option>
-                  <option value="detalhado">Detalhado</option>
-                  <option value="criativo">Criativo</option>
-                  <option value="formal">Formal</option>
-                </select>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-info">
-                <strong>Atalhos</strong>
-                <div class="chip-list">
-                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='direto'">Direto</button>
-                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='detalhado'">Detalhado</button>
-                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='criativo'">Criativo</button>
-                  <button type="button" class="chip" onclick="document.getElementById('set-estilo').value='formal'">Formal</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-section" id="sec-aparencia">
-            <h3>Aparência</h3>
-            <p class="desc">Tema e tamanho do texto.</p>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Tema</strong><span>Claro ou escuro</span></div>
-              <div class="setting-control">
-                <div class="theme-pills">
-                  <button type="button" class="theme-pill" id="pill-dark" onclick="definirTema('dark')">🌙 Escuro</button>
-                  <button type="button" class="theme-pill" id="pill-light" onclick="definirTema('light')">☀️ Claro</button>
-                </div>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Tamanho do texto</strong><span>Mensagens do chat</span></div>
-              <div class="setting-control">
-                <select id="set-fontsize" onchange="aplicarFontSize(this.value)">
-                  <option value="0.88">Pequeno</option>
-                  <option value="0.95" selected>Médio</option>
-                  <option value="1.05">Grande</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-section" id="sec-dados">
-            <h3>Dados</h3>
-            <p class="desc">Controle o histórico neste navegador.</p>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Apagar conversas</strong><span>Remove o histórico desta conta</span></div>
-              <div class="setting-control"><button type="button" class="btn-setting-danger" onclick="apagarTodasConversas()">Apagar</button></div>
-            </div>
-            <div class="setting-row">
-              <div class="setting-info"><strong>Exportar conversas</strong><span>Baixa JSON do histórico</span></div>
-              <div class="setting-control"><button type="button" class="btn-setting-action" onclick="exportarConversas()">Exportar</button></div>
-            </div>
-          </div>
-
-        </div>
-        <div class="settings-footer">
-          <button type="button" class="btn-settings-save" onclick="salvarSettings()">Salvar alterações</button>
+        <div class="row" style="margin-top:1rem;">
+          <button type="button" class="btn btn-primary" onclick="salvarApi()">Salvar API</button>
+          <button type="button" class="btn btn-danger" onclick="limparApi()">Remover key</button>
+          <button type="button" class="btn btn-ghost" onclick="testarApi()">Testar conexão</button>
         </div>
       </div>
+
+      <div class="card">
+        <h2>Senha deste painel</h2>
+        <p>Altere a senha de acesso ao Ops. Guarde em local seguro.</p>
+        <label>Nova senha</label>
+        <input type="password" id="new-pass" placeholder="mín. 6 caracteres">
+        <label>Confirmar</label>
+        <input type="password" id="new-pass2" placeholder="repita a senha">
+        <button type="button" class="btn btn-primary" onclick="trocarSenha()">Atualizar senha</button>
+      </div>
+
+      <div class="card">
+        <h2>Futuro</h2>
+        <p>Espaço reservado para outras chaves e integrações (OpenAI, analytics, etc.).</p>
+        <label>Notas internas</label>
+        <textarea id="ops-notes" placeholder="Anotações só para você..."></textarea>
+        <button type="button" class="btn btn-ghost" onclick="salvarNotas()">Salvar notas</button>
+      </div>
+
+      <div class="row">
+        <a class="btn btn-ghost link" href="horizon-ai.html">Abrir Horizon AI</a>
+        <button type="button" class="btn btn-ghost" onclick="sair()">Sair do painel</button>
+      </div>
+
+      <p class="hint">
+        Importante: em site estático (Netlify), a key no navegador pode ser vista por quem inspecionar o tráfego ou o código.
+        Para produção séria, o ideal é um backend que guarde a key no servidor.
+      </p>
     </div>
   </div>
 
   <script>
-    /* Fallback embutido. Preferência: painel Ops (bth-ops.html) */
-    const GROQ_API_KEY_FALLBACK = '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';
-    const GROQ_MODEL_FALLBACK = 'openai/gpt-oss-20b';
-    const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
     const STORAGE_OPS = 'bth_ops_config_v1';
+    const STORAGE_PASS = 'bth_ops_pass_hash_v1';
+    const STORAGE_SESSION = 'bth_ops_session_v1';
+    const DEFAULT_PASS = 'horizon-ops-2026';
 
-    function getOpsConfig() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_OPS) || '{}'); }
-      catch (e) { return {}; }
-    }
-    function getGroqKey() {
-      const ops = getOpsConfig();
-      const k = (ops.key || GROQ_API_KEY_FALLBACK || '').trim();
-      if (!k || k.includes('COLE_SUA')) return '';
-      return k;
-    }
-    function getGroqModel() {
-      const ops = getOpsConfig();
-      return ops.model || GROQ_MODEL_FALLBACK || 'openai/gpt-oss-20b';
-    }
-
-    const STORAGE_USERS = 'horizon_ai_users_v2';
-    const STORAGE_SESSION = 'horizon_ai_session_v2';
-    const STORAGE_PREFS = 'horizon_ai_prefs_v1';
-
-    const BASE_SYSTEM = `Você é a Horizon AI, assistente da Beyond the Horizon.
-Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com).`;
-
-    let usuario = null, conversas = [], conversaAtualId = null, gerando = false;
-    let prefs = carregarPrefs();
-    let reconhecimento = null;
-    let gravando = false;
-
-    function carregarPrefs() {
-      try {
-        return Object.assign({
-          idioma: 'pt-BR', enterEnvia: true, sugestoes: true,
-          instructions: '', estilo: 'equilibrado', fontSize: '0.95', theme: 'dark'
-        }, JSON.parse(localStorage.getItem(STORAGE_PREFS) || '{}'));
-      } catch (e) {
-        return { idioma: 'pt-BR', enterEnvia: true, sugestoes: true, instructions: '', estilo: 'equilibrado', fontSize: '0.95', theme: 'dark' };
-      }
-    }
-    function salvarPrefs() { localStorage.setItem(STORAGE_PREFS, JSON.stringify(prefs)); }
-
-    function aplicarTema(theme) {
-      const t = theme === 'light' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', t);
-      prefs.theme = t;
-      const btn = document.getElementById('btn-theme');
-      if (btn) btn.textContent = t === 'dark' ? '🌙' : '☀️';
-      const pd = document.getElementById('pill-dark');
-      const pl = document.getElementById('pill-light');
-      if (pd && pl) {
-        pd.classList.toggle('active', t === 'dark');
-        pl.classList.toggle('active', t === 'light');
-      }
-    }
-    function definirTema(t) { aplicarTema(t); }
-    function alternarTema() {
-      aplicarTema(prefs.theme === 'dark' ? 'light' : 'dark');
-      salvarPrefs();
-    }
-
-    function montarSystemPrompt() {
-      let p = BASE_SYSTEM;
-      const idiomas = { 'pt-BR': 'português do Brasil', en: 'English', es: 'español' };
-      p += `\nResponda em ${idiomas[prefs.idioma] || 'português do Brasil'}.`;
-      const estilos = {
-        equilibrado: 'Tom equilibrado.',
-        direto: 'Respostas curtas e diretas.',
-        detalhado: 'Respostas detalhadas com exemplos.',
-        criativo: 'Tom criativo.',
-        formal: 'Tom formal e profissional.'
-      };
-      p += ' ' + (estilos[prefs.estilo] || estilos.equilibrado);
-      if (prefs.instructions && prefs.instructions.trim()) p += '\n\nInstruções do usuário:\n' + prefs.instructions.trim();
-      return p;
-    }
-
-    function sha256sync(str) {
+    function sha256(str) {
       function rotr(n, x) { return (x >>> n) | (x << (32 - n)); }
       function ch(x, y, z) { return (x & y) ^ (~x & z); }
       function maj(x, y, z) { return (x & y) ^ (x & z) ^ (y & z); }
@@ -878,466 +262,148 @@ Seja clara e prestativa. Use Markdown. Links no formato [texto](https://url.com)
       }
       return H.map(x => ('00000000'+x.toString(16)).slice(-8)).join('');
     }
-    function hashSenha(senha, salt) { return sha256sync(salt + '::' + senha); }
-    function gerarSalt() {
-      let s = '';
-      for (let i = 0; i < 32; i++) s += Math.floor(Math.random() * 16).toString(16);
-      return s;
-    }
 
-    function convKey() { return 'horizon_ai_conv_v2_' + (usuario ? usuario.id : 'guest'); }
-    function getUsers() {
-      try { const list = JSON.parse(localStorage.getItem(STORAGE_USERS) || '[]'); return Array.isArray(list) ? list : []; }
-      catch (e) { return []; }
-    }
-    function saveUsers(list) { localStorage.setItem(STORAGE_USERS, JSON.stringify(list)); }
-
-    function mostrarErroAuth(msg) {
-      document.getElementById('auth-ok').classList.remove('show');
-      const el = document.getElementById('auth-error'); el.textContent = msg; el.classList.add('show');
-    }
-    function mostrarOkAuth(msg) {
-      document.getElementById('auth-error').classList.remove('show');
-      const el = document.getElementById('auth-ok'); el.textContent = msg; el.classList.add('show');
-    }
-    function limparMsgsAuth() {
-      document.getElementById('auth-error').classList.remove('show');
-      document.getElementById('auth-ok').classList.remove('show');
-    }
-    function trocarAuthTab(tab) {
-      limparMsgsAuth();
-      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
-      document.getElementById('tab-register').classList.toggle('active', tab === 'register');
-      document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
-      document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
-    }
-    const ICON_LOCK_CLOSED = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
-    const ICON_LOCK_OPEN = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/></svg>';
-
-    /* Cadeado fechado = senha oculta | aberto = senha visível */
-    function toggleLock(inputId, btn) {
-      const input = document.getElementById(inputId);
-      if (!input) return;
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.innerHTML = ICON_LOCK_OPEN;
-        btn.classList.add('open');
-      } else {
-        input.type = 'password';
-        btn.innerHTML = ICON_LOCK_CLOSED;
-        btn.classList.remove('open');
+    function getPassHash() {
+      let h = localStorage.getItem(STORAGE_PASS);
+      if (!h) {
+        h = sha256(DEFAULT_PASS);
+        localStorage.setItem(STORAGE_PASS, h);
       }
+      return h;
     }
 
-    /* Gravação de voz → texto no campo (Chrome/Edge) */
-    function initSpeech() {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SR) return null;
-      const rec = new SR();
-      rec.lang = prefs.idioma === 'en' ? 'en-US' : prefs.idioma === 'es' ? 'es-ES' : 'pt-BR';
-      rec.continuous = true;
-      rec.interimResults = true;
-      rec.onresult = (event) => {
-        let final = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) final += event.results[i][0].transcript;
-        }
-        if (final) {
-          const input = document.getElementById('input');
-          input.value = (input.value ? input.value.trim() + ' ' : '') + final.trim();
-          autoResize(input);
-        }
-      };
-      rec.onerror = (e) => {
-        if (e.error === 'not-allowed') alert('Permita o microfone no navegador para gravar.');
-        pararGravacao();
-      };
-      rec.onend = () => {
-        if (gravando) {
-          try { rec.start(); } catch (err) { pararGravacao(); }
-        }
-      };
-      return rec;
+    function getConfig() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_OPS) || '{}'); }
+      catch (e) { return {}; }
+    }
+    function setConfig(cfg) {
+      localStorage.setItem(STORAGE_OPS, JSON.stringify(cfg));
     }
 
-    function toggleGravacao() {
-      if (gravando) pararGravacao();
-      else iniciarGravacao();
+    function showMsg(text, ok) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.className = 'msg show ' + (ok ? 'ok' : 'err');
     }
 
-    function iniciarGravacao() {
-      if (!reconhecimento) reconhecimento = initSpeech();
-      if (!reconhecimento) {
-        alert('Seu navegador não suporte ditado por voz. Use Chrome ou Edge.');
-        return;
-      }
-      reconhecimento.lang = prefs.idioma === 'en' ? 'en-US' : prefs.idioma === 'es' ? 'es-ES' : 'pt-BR';
+    function togglePass() {
+      const input = document.getElementById('ops-pass');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function entrar() {
+      const senha = document.getElementById('ops-pass').value;
+      if (!senha) return showMsg('Digite a senha.', false);
+      if (sha256(senha) !== getPassHash()) return showMsg('Senha incorreta.', false);
+      sessionStorage.setItem(STORAGE_SESSION, '1');
+      abrirPainel();
+    }
+
+    function sair() {
+      sessionStorage.removeItem(STORAGE_SESSION);
+      document.getElementById('panel').classList.remove('show');
+      document.getElementById('gate').classList.add('show');
+      document.getElementById('ops-pass').value = '';
+      showMsg('Sessão encerrada.', true);
+    }
+
+    function atualizarStatus() {
+      const cfg = getConfig();
+      const has = !!(cfg.key && cfg.key.trim());
+      document.getElementById('api-dot').classList.toggle('on', has);
+      document.getElementById('api-status').textContent = has
+        ? 'API configurada neste navegador'
+        : 'API não configurada';
+    }
+
+    function abrirPainel() {
+      document.getElementById('gate').classList.remove('show');
+      document.getElementById('panel').classList.add('show');
+      const cfg = getConfig();
+      document.getElementById('api-key').value = cfg.key || '';
+      document.getElementById('api-model').value = cfg.model || 'openai/gpt-oss-20b';
+      document.getElementById('ops-notes').value = cfg.notes || '';
+      atualizarStatus();
+      showMsg('Acesso liberado.', true);
+    }
+
+    function salvarApi() {
+      const key = document.getElementById('api-key').value.trim();
+      const model = document.getElementById('api-model').value;
+      if (!key) return showMsg('Cole a API key da Groq.', false);
+      if (!key.startsWith('gsk_')) return showMsg('Key da Groq costuma começar com gsk_', false);
+      const cfg = getConfig();
+      cfg.key = key;
+      cfg.model = model;
+      cfg.updatedAt = new Date().toISOString();
+      setConfig(cfg);
+      atualizarStatus();
+      showMsg('API salva neste navegador. Abra o Horizon AI para usar.', true);
+    }
+
+    function limparApi() {
+      if (!confirm('Remover a API key salva?')) return;
+      const cfg = getConfig();
+      delete cfg.key;
+      setConfig(cfg);
+      document.getElementById('api-key').value = '';
+      atualizarStatus();
+      showMsg('Key removida.', true);
+    }
+
+    async function testarApi() {
+      const cfg = getConfig();
+      const key = (document.getElementById('api-key').value.trim() || cfg.key || '').trim();
+      const model = document.getElementById('api-model').value || cfg.model || 'openai/gpt-oss-20b';
+      if (!key) return showMsg('Salve ou cole uma key antes de testar.', false);
+      showMsg('Testando conexão…', true);
       try {
-        reconhecimento.start();
-        gravando = true;
-        document.getElementById('btn-mic').classList.add('recording');
-        document.getElementById('input-wrap').classList.add('recording');
-        document.getElementById('rec-status').classList.add('show');
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + key
+          },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'user', content: 'Responda só: ok' }],
+            max_tokens: 16
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error?.message || ('HTTP ' + res.status));
+        showMsg('Conexão OK · modelo respondeu.', true);
       } catch (e) {
-        alert('Não foi possível iniciar o microfone.');
+        showMsg('Falha: ' + (e.message || 'erro de rede'), false);
       }
     }
 
-    function pararGravacao() {
-      gravando = false;
-      try { if (reconhecimento) reconhecimento.stop(); } catch (e) {}
-      const mic = document.getElementById('btn-mic');
-      const wrap = document.getElementById('input-wrap');
-      const st = document.getElementById('rec-status');
-      if (mic) mic.classList.remove('recording');
-      if (wrap) wrap.classList.remove('recording');
-      if (st) st.classList.remove('show');
-    }
-    function limparContasLocal() {
-      if (!confirm('Apagar todas as contas deste navegador?')) return;
-      localStorage.removeItem(STORAGE_USERS);
-      sessionStorage.removeItem(STORAGE_SESSION);
-      Object.keys(localStorage).forEach(k => { if (k.startsWith('horizon_ai_conv')) localStorage.removeItem(k); });
-      mostrarOkAuth('Contas apagadas. Crie uma conta nova.');
-      trocarAuthTab('register');
+    function trocarSenha() {
+      const a = document.getElementById('new-pass').value;
+      const b = document.getElementById('new-pass2').value;
+      if (a.length < 6) return showMsg('Nova senha: mínimo 6 caracteres.', false);
+      if (a !== b) return showMsg('As senhas não coincidem.', false);
+      localStorage.setItem(STORAGE_PASS, sha256(a));
+      document.getElementById('new-pass').value = '';
+      document.getElementById('new-pass2').value = '';
+      showMsg('Senha do painel atualizada.', true);
     }
 
-    function fazerCadastro() {
-      limparMsgsAuth();
-      try {
-        const nome = document.getElementById('reg-nome').value.trim();
-        const user = document.getElementById('reg-user').value.trim().toLowerCase().replace(/\s+/g, '');
-        const senha = document.getElementById('reg-pass').value;
-        const senha2 = document.getElementById('reg-pass2').value;
-        if (!nome || nome.length < 2) return mostrarErroAuth('Informe seu nome.');
-        if (!user || user.length < 3) return mostrarErroAuth('Usuário: mín. 3 caracteres.');
-        if (!/^[a-z0-9._-]+$/.test(user)) return mostrarErroAuth('Usuário inválido.');
-        if (senha.length < 6) return mostrarErroAuth('Senha: mín. 6 caracteres.');
-        if (senha !== senha2) return mostrarErroAuth('Senhas não coincidem.');
-        const users = getUsers();
-        if (users.some(u => u.user === user)) return mostrarErroAuth('Usuário já existe.');
-        const salt = gerarSalt();
-        const novo = { id: 'u_' + Date.now() + '_' + Math.floor(Math.random()*9999), nome, user, salt, hash: hashSenha(senha, salt), criadoEm: new Date().toISOString() };
-        users.push(novo); saveUsers(users);
-        sessionStorage.setItem(STORAGE_SESSION, JSON.stringify({ id: novo.id, nome: novo.nome, user: novo.user }));
-        entrarNoApp(novo);
-      } catch (err) { mostrarErroAuth('Erro: ' + (err.message || 'tente de novo')); }
+    function salvarNotas() {
+      const cfg = getConfig();
+      cfg.notes = document.getElementById('ops-notes').value;
+      setConfig(cfg);
+      showMsg('Notas salvas.', true);
     }
 
-    function fazerLogin() {
-      limparMsgsAuth();
-      try {
-        const user = document.getElementById('login-user').value.trim().toLowerCase().replace(/\s+/g, '');
-        const senha = document.getElementById('login-pass').value;
-        if (!user || !senha) return mostrarErroAuth('Preencha usuário e senha.');
-        const users = getUsers();
-        if (!users.length) return mostrarErroAuth('Nenhuma conta. Crie uma conta.');
-        const encontrado = users.find(u => u.user === user);
-        if (!encontrado) return mostrarErroAuth('Usuário não encontrado.');
-        if (hashSenha(senha, encontrado.salt) !== encontrado.hash) return mostrarErroAuth('Senha incorreta.');
-        sessionStorage.setItem(STORAGE_SESSION, JSON.stringify({ id: encontrado.id, nome: encontrado.nome, user: encontrado.user }));
-        entrarNoApp(encontrado);
-      } catch (err) { mostrarErroAuth('Erro: ' + (err.message || 'tente de novo')); }
-    }
+    document.getElementById('ops-pass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') entrar();
+    });
 
-    function fazerLogout() {
-      pararGravacao();
-      sessionStorage.removeItem(STORAGE_SESSION);
-      usuario = null; conversas = []; conversaAtualId = null;
-      document.getElementById('app').classList.remove('active');
-      document.getElementById('auth-screen').classList.remove('hidden');
-      document.getElementById('login-pass').value = '';
-      limparMsgsAuth();
-    }
-
-    function entrarNoApp(userObj) {
-      usuario = { id: userObj.id, nome: userObj.nome, user: userObj.user };
-      document.getElementById('auth-screen').classList.add('hidden');
-      document.getElementById('app').classList.add('active');
-      document.getElementById('user-chip').textContent = usuario.nome || usuario.user;
-      try { conversas = JSON.parse(localStorage.getItem(convKey()) || '[]'); if (!Array.isArray(conversas)) conversas = []; }
-      catch (e) { conversas = []; }
-      aplicarTema(prefs.theme || 'dark');
-      aplicarFontSize(prefs.fontSize);
-      novaConversa();
-      document.getElementById('input').focus();
-    }
-
-    function boot() {
-      aplicarTema(prefs.theme || 'dark');
-      try {
-        const sess = JSON.parse(sessionStorage.getItem(STORAGE_SESSION) || 'null');
-        if (sess && sess.id) {
-          const u = getUsers().find(x => x.id === sess.id);
-          if (u) { entrarNoApp(u); return; }
-        }
-      } catch (e) {}
-    }
-
-    document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin(); });
-    document.getElementById('reg-pass2').addEventListener('keydown', e => { if (e.key === 'Enter') fazerCadastro(); });
-
-    function toggleBtn(el) { el.classList.toggle('on'); }
-    function abrirSettings(secao) {
-      preencherSettingsForm();
-      document.getElementById('settings-overlay').classList.add('open');
-      irSecao(secao || 'geral');
-    }
-    function fecharSettings() { document.getElementById('settings-overlay').classList.remove('open'); }
-    function irSecao(id) {
-      document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.settings-nav-btn').forEach(b => b.classList.remove('active'));
-      const sec = document.getElementById('sec-' + id);
-      if (sec) sec.classList.add('active');
-      const btn = document.querySelector('.settings-nav-btn[data-sec="'+id+'"]');
-      if (btn) btn.classList.add('active');
-      const titles = { geral: 'Geral', conta: 'Conta', comportamento: 'Comportamento', aparencia: 'Aparência', dados: 'Dados' };
-      document.getElementById('settings-title').textContent = titles[id] || 'Configurações';
-    }
-    function preencherSettingsForm() {
-      document.getElementById('set-idioma').value = prefs.idioma || 'pt-BR';
-      document.getElementById('set-enter').classList.toggle('on', prefs.enterEnvia !== false);
-      document.getElementById('set-sugestoes').classList.toggle('on', prefs.sugestoes !== false);
-      document.getElementById('set-instructions').value = prefs.instructions || '';
-      document.getElementById('set-estilo').value = prefs.estilo || 'equilibrado';
-      document.getElementById('set-fontsize').value = prefs.fontSize || '0.95';
-      aplicarTema(prefs.theme || 'dark');
-      if (usuario) {
-        document.getElementById('acc-nome').textContent = usuario.nome;
-        document.getElementById('acc-user').textContent = '@' + usuario.user;
-        document.getElementById('acc-avatar').textContent = (usuario.nome || 'H').charAt(0).toUpperCase();
-      }
-    }
-    function salvarSettings() {
-      prefs.idioma = document.getElementById('set-idioma').value;
-      prefs.enterEnvia = document.getElementById('set-enter').classList.contains('on');
-      prefs.sugestoes = document.getElementById('set-sugestoes').classList.contains('on');
-      prefs.instructions = document.getElementById('set-instructions').value;
-      prefs.estilo = document.getElementById('set-estilo').value;
-      prefs.fontSize = document.getElementById('set-fontsize').value;
-      salvarPrefs();
-      aplicarFontSize(prefs.fontSize);
-      fecharSettings();
-    }
-    function aplicarFontSize(v) { document.documentElement.style.setProperty('--msg-size', v + 'rem'); }
-    function apagarTodasConversas() {
-      if (!confirm('Apagar todas as conversas?')) return;
-      conversas = [];
-      localStorage.setItem(convKey(), '[]');
-      novaConversa();
-      alert('Conversas apagadas.');
-    }
-    function exportarConversas() {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([JSON.stringify(conversas, null, 2)], { type: 'application/json' }));
-      a.download = 'horizon-ai-conversas.json';
-      a.click();
-    }
-
-    function abrirSidebar() {
-      document.getElementById('sidebar').classList.add('open');
-      document.getElementById('overlay').classList.add('open');
-    }
-    function fecharSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
-      document.getElementById('overlay').classList.remove('open');
-    }
-    function autoResize(el) {
-      el.style.height = 'auto';
-      el.style.height = Math.min(el.scrollHeight, 140) + 'px';
-    }
-    function handleKey(e) {
-      if (e.key === 'Enter' && !e.shiftKey && prefs.enterEnvia !== false) {
-        e.preventDefault(); enviar();
-      }
-    }
-    function usarSugestao(texto) {
-      document.getElementById('input').value = texto;
-      enviar();
-    }
-    function salvarConversas() { localStorage.setItem(convKey(), JSON.stringify(conversas)); }
-    function escapeHtml(text) {
-      const d = document.createElement('div');
-      d.textContent = text == null ? '' : String(text);
-      return d.innerHTML;
-    }
-
-    function markdownToHtml(src) {
-      if (!src) return '';
-      let text = String(src).replace(/\r\n/g, '\n');
-      const blocks = [];
-      const save = (html) => { const i = blocks.length; blocks.push(html); return `%%BLOCK${i}%%`; };
-      text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, l, code) => save(`<pre><code>${escapeHtml(code.replace(/\n$/, ''))}</code></pre>`));
-      text = text.replace(/`([^`\n]+)`/g, (_, c) => save(`<code>${escapeHtml(c)}</code>`));
-      text = escapeHtml(text);
-      text = text.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-      text = text.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-      text = text.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-      text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
-      text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-      text = text.replace(/(^|[\s(])(https?:\/\/[^\s<]+[^\s<.,;:!?)\]"'])/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
-      text = text.replace(/((?:^[\-\*] .+(?:\n|$))+)/gm, block => {
-        const items = block.trim().split('\n').map(l => l.replace(/^[\-\*] /, '')).map(l => `<li>${l}</li>`).join('');
-        return `<ul>${items}</ul>`;
-      });
-      text = text.split(/\n{2,}/).map(block => {
-        block = block.trim();
-        if (!block) return '';
-        if (/^<(h[1-3]|ul|ol|pre)/i.test(block) || /^%%BLOCK\d+%%$/.test(block)) return block;
-        return `<p>${block.replace(/\n/g, '<br>')}</p>`;
-      }).join('');
-      return text.replace(/%%BLOCK(\d+)%%/g, (_, i) => blocks[Number(i)] || '');
-    }
-
-    function novaConversa() {
-      conversaAtualId = null;
-      const nome = usuario ? escapeHtml(usuario.nome.split(' ')[0]) : '';
-      let sug = '';
-      if (prefs.sugestoes !== false) {
-        sug = `<div class="suggestions">
-          <button class="suggestion" onclick="usarSugestao('Me ajuda a escrever um texto profissional')"><strong>✍️ Escrever</strong><span>Texto profissional</span></button>
-          <button class="suggestion" onclick="usarSugestao('Explica o que é inteligência artificial')"><strong>📘 Explicar</strong><span>Qualquer assunto</span></button>
-          <button class="suggestion" onclick="usarSugestao('Organiza um plano para lançar um produto de IA')"><strong>🎯 Planejar</strong><span>Projetos e metas</span></button>
-          <button class="suggestion" onclick="usarSugestao('Gera 5 ideias de posts para Instagram de tech')"><strong>💡 Criar</strong><span>Ideias e conteúdo</span></button>
-        </div>`;
-      }
-      document.getElementById('messages').innerHTML = `
-        <div class="welcome" id="welcome">
-          <h2>Olá${nome ? ', ' + nome : ''}. Eu sou a <span>Horizon AI</span>.</h2>
-          <p>Como posso ajudar você hoje?</p>${sug}
-        </div>`;
-      renderizarListaConversas();
-      document.getElementById('input').focus();
-    }
-
-    function excluirConversa(id, event) {
-      if (event) { event.stopPropagation(); event.preventDefault(); }
-      if (!confirm('Excluir esta conversa?')) return;
-      conversas = conversas.filter(c => c.id !== id);
-      salvarConversas();
-      if (conversaAtualId === id) novaConversa(); else renderizarListaConversas();
-    }
-
-    function renderizarListaConversas() {
-      const el = document.getElementById('conversations');
-      if (!conversas.length) {
-        el.innerHTML = '<div style="padding:1rem;color:var(--text-muted);font-size:0.8rem;text-align:center;">Nenhuma conversa ainda</div>';
-        return;
-      }
-      el.innerHTML = conversas.map(c => `
-        <div class="conv-item ${c.id === conversaAtualId ? 'active' : ''}">
-          <div class="conv-title" onclick="abrirConversa('${c.id}')">${escapeHtml(c.titulo || 'Nova conversa')}</div>
-          <button class="btn-del-conv" onclick="excluirConversa('${c.id}', event)">🗑</button>
-        </div>`).join('');
-    }
-
-    function abrirConversa(id) {
-      const conv = conversas.find(c => c.id === id);
-      if (!conv) return;
-      conversaAtualId = id;
-      const messages = document.getElementById('messages');
-      messages.innerHTML = '';
-      conv.mensagens.forEach(m => appendMsg(m.role, m.text, false));
-      renderizarListaConversas();
-      fecharSidebar();
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function appendMsg(role, text, animate = true, isError = false) {
-      const welcome = document.getElementById('welcome');
-      if (welcome) welcome.remove();
-      const messages = document.getElementById('messages');
-      const div = document.createElement('div');
-      div.className = `msg ${role}`;
-      if (!animate) div.style.animation = 'none';
-      let body;
-      if (isError) body = `<p class="error-msg">${escapeHtml(text)}</p>`;
-      else if (role === 'bot') body = `<div class="md">${markdownToHtml(text)}</div>`;
-      else body = `<div class="md">${escapeHtml(text)}</div>`;
-      div.innerHTML = `<div class="msg-avatar">${role === 'user' ? 'V' : 'H'}</div><div class="msg-content">${body}</div>`;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function mostrarTyping() {
-      const messages = document.getElementById('messages');
-      const div = document.createElement('div');
-      div.className = 'msg bot'; div.id = 'typing-indicator';
-      div.innerHTML = `<div class="msg-avatar">H</div><div class="msg-content"><div class="typing"><span></span><span></span><span></span></div></div>`;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    }
-    function removerTyping() {
-      const t = document.getElementById('typing-indicator');
-      if (t) t.remove();
-    }
-
-    async function chamarGroq(historico) {
-      const key = getGroqKey();
-      const model = getGroqModel();
-      if (!key) {
-        throw new Error('API não configurada. Acesse o painel Ops e salve a key.');
-      }
-      const messages = [
-        { role: 'system', content: montarSystemPrompt() },
-        ...historico.map(m => ({ role: m.role === 'bot' ? 'assistant' : 'user', content: m.text }))
-      ];
-      const res = await fetch(GROQ_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, messages, temperature: 0.7, max_tokens: 2048 })
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error?.message || data.message || 'Erro HTTP ' + res.status);
-      const content = data.choices?.[0]?.message?.content;
-      if (!content) throw new Error('Resposta vazia.');
-      return content.trim();
-    }
-
-    async function enviar() {
-      if (gerando || !usuario) return;
-      if (gravando) pararGravacao();
-      const input = document.getElementById('input');
-      const texto = input.value.trim();
-      if (!texto) return;
-
-      input.value = '';
-      input.style.height = 'auto';
-      gerando = true;
-      document.getElementById('btn-send').disabled = true;
-
-      if (!conversaAtualId) {
-        conversaAtualId = 'c_' + Date.now();
-        conversas.unshift({ id: conversaAtualId, titulo: texto.slice(0, 40) + (texto.length > 40 ? '…' : ''), mensagens: [] });
-      }
-
-      const conv = conversas.find(c => c.id === conversaAtualId);
-      conv.mensagens.push({ role: 'user', text: texto });
-      appendMsg('user', texto);
-      salvarConversas();
-      renderizarListaConversas();
-      mostrarTyping();
-
-      try {
-        const resposta = await chamarGroq(conv.mensagens);
-        removerTyping();
-        appendMsg('bot', resposta);
-        conv.mensagens.push({ role: 'bot', text: resposta });
-        salvarConversas();
-      } catch (err) {
-        removerTyping();
-        let msg = err.message || 'Erro na API.';
-        if (/Failed to fetch|CORS/i.test(msg)) msg = 'Use Live Server (localhost).';
-        appendMsg('bot', 'Erro: ' + msg, true, true);
-      }
-
-      gerando = false;
-      document.getElementById('btn-send').disabled = false;
-      input.focus();
-    }
-
-    boot();
+    // boot
+    getPassHash();
+    if (sessionStorage.getItem(STORAGE_SESSION) === '1') abrirPainel();
+    else document.getElementById('gate').classList.add('show');
   </script>
 </body>
 </html>
