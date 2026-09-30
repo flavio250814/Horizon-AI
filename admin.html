@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ops · Beyond the Horizon</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050B1A;
+      --panel: #0A1A3A;
+      --input: rgba(5, 11, 26, 0.75);
+      --text: #FFFFFF;
+      --muted: #A8B8D0;
+      --border: rgba(0, 123, 255, 0.22);
+      --cyan: #00D1B2;
+      --blue: #007BFF;
+      --danger: #ff4d6d;
+      --gradient: linear-gradient(135deg, #007BFF, #00D1B2);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 0.35rem;
+    }
+    .brand img { height: 32px; border-radius: 7px; }
+    .brand span {
+      font-weight: 800; font-size: 1.05rem;
+      background: var(--gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .sub {
+      color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem;
+    }
+    .badge {
+      display: inline-flex; padding: 0.3rem 0.7rem; border-radius: 50px;
+      font-size: 0.72rem; font-weight: 600;
+      background: rgba(255, 77, 109, 0.12);
+      border: 1px solid rgba(255, 77, 109, 0.3);
+      color: var(--danger); margin-bottom: 1.2rem;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .card h2 {
+      font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem;
+    }
+    .card p {
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.45;
+    }
+    label {
+      display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem;
+    }
+    input, select, textarea {
+      width: 100%; padding: 0.8rem 1rem;
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text);
+      font-family: 'Montserrat', sans-serif; font-size: 0.9rem; outline: none;
+      margin-bottom: 0.9rem;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+    textarea { min-height: 90px; resize: vertical; }
+    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .btn {
+      padding: 0.75rem 1.1rem; border: none; border-radius: 12px;
+      font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--gradient); color: white; }
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-danger {
+      background: rgba(255, 77, 109, 0.12);
+      border: 1px solid rgba(255, 77, 109, 0.35);
+      color: var(--danger);
+    }
+    .msg {
+      display: none; padding: 0.7rem 0.9rem; border-radius: 10px;
+      font-size: 0.8rem; margin-bottom: 1rem;
+    }
+    .msg.show { display: block; }
+    .msg.ok {
+      background: rgba(0, 209, 178, 0.12);
+      border: 1px solid rgba(0, 209, 178, 0.3); color: var(--cyan);
+    }
+    .msg.err {
+      background: rgba(255, 77, 109, 0.12);
+      border: 1px solid rgba(255, 77, 109, 0.3); color: var(--danger);
+    }
+    .status-line {
+      font-size: 0.8rem; color: var(--muted);
+      display: flex; align-items: center; gap: 8px; margin-top: 0.3rem;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--danger);
+    }
+    .dot.on { background: var(--cyan); }
+    #gate, #panel { display: none; }
+    #gate.show, #panel.show { display: block; }
+    .pass-wrap { position: relative; }
+    .pass-wrap input { padding-right: 3rem; margin-bottom: 0.9rem; }
+    .btn-lock {
+      position: absolute; right: 8px; top: 34px;
+      width: 36px; height: 36px; border: none; border-radius: 10px;
+      background: transparent; color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-lock svg {
+      width: 18px; height: 18px; stroke: currentColor; fill: none;
+      stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .hint {
+      font-size: 0.72rem; color: var(--muted); opacity: 0.75; margin-top: 1.2rem; line-height: 1.5;
+    }
+    a.link { color: var(--cyan); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <img src="logo.png" alt="Logo">
+      <span>Beyond the Horizon · Ops</span>
+    </div>
+    <p class="sub">Painel interno — não linkar no site público</p>
+    <div class="badge">Área restrita · noindex</div>
+
+    <div class="msg" id="msg"></div>
+
+    <!-- LOGIN -->
+    <div id="gate">
+      <div class="card">
+        <h2>Acesso</h2>
+        <p>Digite a senha de operações para continuar.</p>
+        <div class="pass-wrap">
+          <label>Senha</label>
+          <input type="password" id="ops-pass" placeholder="Senha do painel" autocomplete="current-password">
+          <button type="button" class="btn-lock" onclick="togglePass()" aria-label="Mostrar senha">
+            <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          </button>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="entrar()">Entrar</button>
+      </div>
+      <p class="hint">
+        URL secreta (não divulgue): <code>/bth-ops.html</code><br>
+        Senha padrão na primeira vez: <code>horizon-ops-2026</code> — troque depois de entrar.
+      </p>
+    </div>
+
+    <!-- PAINEL -->
+    <div id="panel">
+      <div class="card">
+        <h2>API Groq</h2>
+        <p>A key fica salva só neste navegador e é lida pelo Horizon AI. Não aparece nas configurações públicas.</p>
+
+        <label>API Key</label>
+        <input type="password" id="api-key" placeholder="gsk_...">
+
+        <label>Modelo</label>
+        <select id="api-model">
+          <option value="openai/gpt-oss-20b">GPT-OSS 20B (rápido)</option>
+          <option value="openai/gpt-oss-120b">GPT-OSS 120B (mais capaz)</option>
+        </select>
+
+        <div class="status-line">
+          <span class="dot" id="api-dot"></span>
+          <span id="api-status">API não configurada</span>
+        </div>
+
+        <div class="row" style="margin-top:1rem;">
+          <button type="button" class="btn btn-primary" onclick="salvarApi()">Salvar API</button>
+          <button type="button" class="btn btn-danger" onclick="limparApi()">Remover key</button>
+          <button type="button" class="btn btn-ghost" onclick="testarApi()">Testar conexão</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Senha deste painel</h2>
+        <p>Altere a senha de acesso ao Ops. Guarde em local seguro.</p>
+        <label>Nova senha</label>
+        <input type="password" id="new-pass" placeholder="mín. 6 caracteres">
+        <label>Confirmar</label>
+        <input type="password" id="new-pass2" placeholder="repita a senha">
+        <button type="button" class="btn btn-primary" onclick="trocarSenha()">Atualizar senha</button>
+      </div>
+
+      <div class="card">
+        <h2>Futuro</h2>
+        <p>Espaço reservado para outras chaves e integrações (OpenAI, analytics, etc.).</p>
+        <label>Notas internas</label>
+        <textarea id="ops-notes" placeholder="Anotações só para você..."></textarea>
+        <button type="button" class="btn btn-ghost" onclick="salvarNotas()">Salvar notas</button>
+      </div>
+
+      <div class="row">
+        <a class="btn btn-ghost link" href="horizon-ai.html">Abrir Horizon AI</a>
+        <button type="button" class="btn btn-ghost" onclick="sair()">Sair do painel</button>
+      </div>
+
+      <p class="hint">
+        Importante: em site estático (Netlify), a key no navegador pode ser vista por quem inspecionar o tráfego ou o código.
+        Para produção séria, o ideal é um backend que guarde a key no servidor.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_OPS = 'bth_ops_config_v1';
+    const STORAGE_PASS = 'bth_ops_pass_hash_v1';
+    const STORAGE_SESSION = 'bth_ops_session_v1';
+    const DEFAULT_PASS = 'horizon-ops-2026';
+
+    function sha256(str) {
+      function rotr(n, x) { return (x >>> n) | (x << (32 - n)); }
+      function ch(x, y, z) { return (x & y) ^ (~x & z); }
+      function maj(x, y, z) { return (x & y) ^ (x & z) ^ (y & z); }
+      function bsig0(x) { return rotr(2, x) ^ rotr(13, x) ^ rotr(22, x); }
+      function bsig1(x) { return rotr(6, x) ^ rotr(11, x) ^ rotr(25, x); }
+      function ssig0(x) { return rotr(7, x) ^ rotr(18, x) ^ (x >>> 3); }
+      function ssig1(x) { return rotr(17, x) ^ rotr(19, x) ^ (x >>> 10); }
+      const K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+      const utf8 = unescape(encodeURIComponent(str));
+      const bytes = [];
+      for (let i = 0; i < utf8.length; i++) bytes.push(utf8.charCodeAt(i));
+      const bitLen = bytes.length * 8;
+      bytes.push(0x80);
+      while ((bytes.length % 64) !== 56) bytes.push(0);
+      for (let i = 7; i >= 0; i--) bytes.push((bitLen / Math.pow(2, 8 * i)) & 0xff);
+      let H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+      for (let i = 0; i < bytes.length; i += 64) {
+        const w = new Array(64);
+        for (let t = 0; t < 16; t++) w[t] = (bytes[i+t*4]<<24)|(bytes[i+t*4+1]<<16)|(bytes[i+t*4+2]<<8)|bytes[i+t*4+3];
+        for (let t = 16; t < 64; t++) w[t] = (ssig1(w[t-2])+w[t-7]+ssig0(w[t-15])+w[t-16])>>>0;
+        let [a,b,c,d,e,f,g,h] = H;
+        for (let t = 0; t < 64; t++) {
+          const t1 = (h+bsig1(e)+ch(e,f,g)+K[t]+w[t])>>>0;
+          const t2 = (bsig0(a)+maj(a,b,c))>>>0;
+          h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+        }
+        H[0]=(H[0]+a)>>>0;H[1]=(H[1]+b)>>>0;H[2]=(H[2]+c)>>>0;H[3]=(H[3]+d)>>>0;
+        H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;
+      }
+      return H.map(x => ('00000000'+x.toString(16)).slice(-8)).join('');
+    }
+
+    function getPassHash() {
+      let h = localStorage.getItem(STORAGE_PASS);
+      if (!h) {
+        h = sha256(DEFAULT_PASS);
+        localStorage.setItem(STORAGE_PASS, h);
+      }
+      return h;
+    }
+
+    function getConfig() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_OPS) || '{}'); }
+      catch (e) { return {}; }
+    }
+    function setConfig(cfg) {
+      localStorage.setItem(STORAGE_OPS, JSON.stringify(cfg));
+    }
+
+    function showMsg(text, ok) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.className = 'msg show ' + (ok ? 'ok' : 'err');
+    }
+
+    function togglePass() {
+      const input = document.getElementById('ops-pass');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function entrar() {
+      const senha = document.getElementById('ops-pass').value;
+      if (!senha) return showMsg('Digite a senha.', false);
+      if (sha256(senha) !== getPassHash()) return showMsg('Senha incorreta.', false);
+      sessionStorage.setItem(STORAGE_SESSION, '1');
+      abrirPainel();
+    }
+
+    function sair() {
+      sessionStorage.removeItem(STORAGE_SESSION);
+      document.getElementById('panel').classList.remove('show');
+      document.getElementById('gate').classList.add('show');
+      document.getElementById('ops-pass').value = '';
+      showMsg('Sessão encerrada.', true);
+    }
+
+    function atualizarStatus() {
+      const cfg = getConfig();
+      const has = !!(cfg.key && cfg.key.trim());
+      document.getElementById('api-dot').classList.toggle('on', has);
+      document.getElementById('api-status').textContent = has
+        ? 'API configurada neste navegador'
+        : 'API não configurada';
+    }
+
+    function abrirPainel() {
+      document.getElementById('gate').classList.remove('show');
+      document.getElementById('panel').classList.add('show');
+      const cfg = getConfig();
+      document.getElementById('api-key').value = cfg.key || '';
+      document.getElementById('api-model').value = cfg.model || 'openai/gpt-oss-20b';
+      document.getElementById('ops-notes').value = cfg.notes || '';
+      atualizarStatus();
+      showMsg('Acesso liberado.', true);
+    }
+
+    function salvarApi() {
+      const key = document.getElementById('api-key').value.trim();
+      const model = document.getElementById('api-model').value;
+      if (!key) return showMsg('Cole a API key da Groq.', false);
+      if (!key.startsWith('gsk_')) return showMsg('Key da Groq costuma começar com gsk_', false);
+      const cfg = getConfig();
+      cfg.key = key;
+      cfg.model = model;
+      cfg.updatedAt = new Date().toISOString();
+      setConfig(cfg);
+      atualizarStatus();
+      showMsg('API salva neste navegador. Abra o Horizon AI para usar.', true);
+    }
+
+    function limparApi() {
+      if (!confirm('Remover a API key salva?')) return;
+      const cfg = getConfig();
+      delete cfg.key;
+      setConfig(cfg);
+      document.getElementById('api-key').value = '';
+      atualizarStatus();
+      showMsg('Key removida.', true);
+    }
+
+    async function testarApi() {
+      const cfg = getConfig();
+      const key = (document.getElementById('api-key').value.trim() || cfg.key || '').trim();
+      const model = document.getElementById('api-model').value || cfg.model || 'openai/gpt-oss-20b';
+      if (!key) return showMsg('Salve ou cole uma key antes de testar.', false);
+      showMsg('Testando conexão…', true);
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + key
+          },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'user', content: 'Responda só: ok' }],
+            max_tokens: 16
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error?.message || ('HTTP ' + res.status));
+        showMsg('Conexão OK · modelo respondeu.', true);
+      } catch (e) {
+        showMsg('Falha: ' + (e.message || 'erro de rede'), false);
+      }
+    }
+
+    function trocarSenha() {
+      const a = document.getElementById('new-pass').value;
+      const b = document.getElementById('new-pass2').value;
+      if (a.length < 6) return showMsg('Nova senha: mínimo 6 caracteres.', false);
+      if (a !== b) return showMsg('As senhas não coincidem.', false);
+      localStorage.setItem(STORAGE_PASS, sha256(a));
+      document.getElementById('new-pass').value = '';
+      document.getElementById('new-pass2').value = '';
+      showMsg('Senha do painel atualizada.', true);
+    }
+
+    function salvarNotas() {
+      const cfg = getConfig();
+      cfg.notes = document.getElementById('ops-notes').value;
+      setConfig(cfg);
+      showMsg('Notas salvas.', true);
+    }
+
+    document.getElementById('ops-pass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') entrar();
+    });
+
+    // boot
+    getPassHash();
+    if (sessionStorage.getItem(STORAGE_SESSION) === '1') abrirPainel();
+    else document.getElementById('gate').classList.add('show');
+  </script>
+</body>
+</html>
