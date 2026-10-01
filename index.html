@@ -911,25 +911,19 @@
   </div>
 
   <script>
-    /* Fallback embutido. Preferência: painel Ops (bth-ops.html) */
-    const GROQ_API_KEY_FALLBACK = '';
-    const GROQ_MODEL_FALLBACK = 'openai/gpt-oss-20b';
-    const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+    /* ===== Ollama (IA local) ===== */
+    const OLLAMA_URL = 'http://localhost:11434/api/chat';
+    const OLLAMA_MODEL = 'qwen2.5:7b';
+    /* ========================== */
     const STORAGE_OPS = 'bth_ops_config_v1';
 
     function getOpsConfig() {
       try { return JSON.parse(localStorage.getItem(STORAGE_OPS) || '{}'); }
       catch (e) { return {}; }
     }
-    function getGroqKey() {
+    function getOllamaModel() {
       const ops = getOpsConfig();
-      const k = (ops.key || GROQ_API_KEY_FALLBACK || '').trim();
-      if (!k || k.includes('COLE_SUA')) return '';
-      return k;
-    }
-    function getGroqModel() {
-      const ops = getOpsConfig();
-      return ops.model || GROQ_MODEL_FALLBACK || 'openai/gpt-oss-20b';
+      return (ops.ollamaModel || OLLAMA_MODEL || 'qwen2.5:7b').trim();
     }
 
     const STORAGE_USERS = 'horizon_ai_users_v2';
@@ -1523,37 +1517,47 @@ Não diga que você não consegue gerar imagens.`;
     }
 
     async function chamarOllama(historico) {
-      const model = getOllamaModel();
-      const messages = [
-        { role: 'system', content: montarSystemPrompt() },
-        ...historico.map(m => ({
+      // Não depende de getOllamaModel externo
+      var model = 'qwen2.5:7b';
+      try {
+        if (typeof getOllamaModel === 'function') {
+          var m2 = getOllamaModel();
+          if (m2) model = m2;
+        }
+      } catch (e) {}
+      var ollamaUrl = 'http://localhost:11434/api/chat';
+      try {
+        if (typeof OLLAMA_URL !== 'undefined' && OLLAMA_URL) ollamaUrl = OLLAMA_URL;
+      } catch (e) {}
+
+      var messages = [{ role: 'system', content: montarSystemPrompt() }];
+      for (var i = 0; i < historico.length; i++) {
+        var m = historico[i];
+        messages.push({
           role: m.role === 'bot' ? 'assistant' : 'user',
           content: m.text
-        }))
-      ];
-      let res;
+        });
+      }
+
+      var res;
       try {
-        res = await fetch(OLLAMA_URL, {
+        res = await fetch(ollamaUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model,
-            messages,
+            model: model,
+            messages: messages,
             stream: false,
             options: { temperature: 0.7 }
           })
         });
       } catch (e) {
-        throw new Error(
-          'Não conectou no Ollama. Abra o app Ollama no Windows e use o site pelo Live Server (localhost), não pelo Netlify.'
-        );
+        throw new Error('Não conectou no Ollama. Abra o Ollama e use Live Server (localhost).');
       }
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        throw new Error(data.error || ('Erro Ollama HTTP ' + res.status));
-      }
-      const content = data.message?.content;
-      if (!content) throw new Error('Resposta vazia do Ollama. Rode: ollama pull qwen2.5:7b');
+      var data = await res.json().catch(function () { return {}; });
+      if (!res.ok) throw new Error(data.error || ('Erro Ollama HTTP ' + res.status));
+      var content = data.message && data.message.content;
+      if (!content) throw new Error('Resposta vazia. Rode: ollama pull qwen2.5:7b');
       return String(content).trim();
     }
 
