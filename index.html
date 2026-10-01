@@ -1522,26 +1522,39 @@ Não diga que você não consegue gerar imagens.`;
       if (t) t.remove();
     }
 
-    async function chamarGroq(historico) {
-      const key = getGroqKey();
-      const model = getGroqModel();
-      if (!key) {
-        throw new Error('API não configurada. Acesse o painel Ops e salve a key.');
-      }
+    async function chamarOllama(historico) {
+      const model = getOllamaModel();
       const messages = [
         { role: 'system', content: montarSystemPrompt() },
-        ...historico.map(m => ({ role: m.role === 'bot' ? 'assistant' : 'user', content: m.text }))
+        ...historico.map(m => ({
+          role: m.role === 'bot' ? 'assistant' : 'user',
+          content: m.text
+        }))
       ];
-      const res = await fetch(GROQ_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, messages, temperature: 0.7, max_tokens: 2048 })
-      });
+      let res;
+      try {
+        res = await fetch(OLLAMA_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model,
+            messages,
+            stream: false,
+            options: { temperature: 0.7 }
+          })
+        });
+      } catch (e) {
+        throw new Error(
+          'Não conectou no Ollama. Abra o app Ollama no Windows e use o site pelo Live Server (localhost), não pelo Netlify.'
+        );
+      }
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error?.message || data.message || 'Erro HTTP ' + res.status);
-      const content = data.choices?.[0]?.message?.content;
-      if (!content) throw new Error('Resposta vazia.');
-      return content.trim();
+      if (!res.ok) {
+        throw new Error(data.error || ('Erro Ollama HTTP ' + res.status));
+      }
+      const content = data.message?.content;
+      if (!content) throw new Error('Resposta vazia do Ollama. Rode: ollama pull qwen2.5:7b');
+      return String(content).trim();
     }
 
     async function enviar() {
@@ -1586,7 +1599,7 @@ Não diga que você não consegue gerar imagens.`;
           conv.mensagens.push({ role: 'bot', text: resposta + '\n\n![' + prompt + '](' + imgUrl + ')', imageUrl: imgUrl });
           salvarConversas();
         } else {
-          const resposta = await chamarGroq(conv.mensagens);
+          const resposta = await chamarOllama(conv.mensagens);
           removerTyping();
           appendMsg('bot', resposta);
           conv.mensagens.push({ role: 'bot', text: resposta });
@@ -1595,7 +1608,9 @@ Não diga que você não consegue gerar imagens.`;
       } catch (err) {
         removerTyping();
         let msg = err.message || 'Erro na API.';
-        if (/Failed to fetch|CORS/i.test(msg)) msg = 'Falha de rede. Tente de novo.';
+        if (/Failed to fetch|CORS|NetworkError/i.test(msg)) {
+          msg = 'Ollama não respondeu. 1) Abra o Ollama no Windows  2) Abra este site em localhost (Live Server)  3) Se precisar, no PowerShell: setx OLLAMA_ORIGINS "*" e reinicie o Ollama';
+        }
         appendMsg('bot', 'Erro: ' + msg, true, true);
       }
 
