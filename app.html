@@ -69,29 +69,6 @@
     .auth-foot { text-align:center; margin-top:1rem; font-size:0.72rem; color:var(--muted); opacity:0.7; }
     .auth-foot a { color:var(--cyan); text-decoration:none; }
 
-    /* Loading model */
-    #model-gate {
-      display:none; position:fixed; inset:0; z-index:100;
-      background:rgba(7,11,20,0.92); backdrop-filter:blur(8px);
-      align-items:center; justify-content:center; padding:1.5rem;
-    }
-    #model-gate.show { display:flex; }
-    .gate-card {
-      width:100%; max-width:420px; background:var(--panel);
-      border:1px solid var(--line); border-radius:18px; padding:1.75rem 1.5rem; text-align:center;
-    }
-    .gate-card h3 { font-size:1.05rem; margin-bottom:0.4rem; }
-    .gate-card p { font-size:0.85rem; color:var(--muted); line-height:1.5; margin-bottom:1rem; }
-    .bar {
-      height:8px; border-radius:99px; background:var(--soft); overflow:hidden; margin-bottom:0.6rem;
-    }
-    .bar > i {
-      display:block; height:100%; width:0%; background:var(--grad);
-      transition:width 0.25s ease;
-    }
-    .gate-pct { font-size:0.8rem; color:var(--cyan); font-weight:600; }
-    .gate-note { font-size:0.75rem; color:var(--muted); margin-top:0.85rem; line-height:1.45; }
-
     #app { display:none; height:100vh; flex-direction:column; }
     #app.on { display:flex; }
 
@@ -108,8 +85,7 @@
       border:1px solid var(--line); color:var(--muted);
     }
     .status.on { color:#4ade80; border-color:rgba(74,222,128,0.3); background:rgba(74,222,128,0.08); }
-    .status.load { color:#fbbf24; border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); }
-    .status.off { color:var(--danger); border-color:rgba(244,63,94,0.3); background:rgba(244,63,94,0.08); }
+    .status.off { color:#fbbf24; border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); }
     .top-right { display:flex; gap:0.4rem; align-items:center; }
     .btn-h {
       padding:0.4rem 0.75rem; border-radius:8px; border:1px solid var(--line);
@@ -292,23 +268,13 @@
   </div>
 </div>
 
-<div id="model-gate">
-  <div class="gate-card">
-    <h3>Carregando Horizon AI</h3>
-    <p id="gate-text">Baixando o modelo no seu navegador…</p>
-    <div class="bar"><i id="gate-bar"></i></div>
-    <div class="gate-pct" id="gate-pct">0%</div>
-    <p class="gate-note">A IA roda no seu dispositivo (WebLLM). Na primeira vez o download pode demorar. Use Chrome ou Edge com WebGPU.</p>
-  </div>
-</div>
-
 <div id="app">
   <div class="overlay" id="overlay"></div>
   <header class="top">
     <div class="top-left">
       <button class="btn-menu" id="btn-menu">☰</button>
       <a class="top-brand" href="index.html"><img src="logo.png" alt=""><span>Horizon AI</span></a>
-      <span class="status load" id="ai-status">IA…</span>
+      <span class="status off" id="api-status">API</span>
     </div>
     <div class="top-right">
       <button class="btn-h" id="btn-nova">Nova</button>
@@ -319,36 +285,52 @@
     <aside class="side" id="side">
       <div class="side-top"><button class="btn-new" id="btn-new">Nova conversa</button></div>
       <div class="convs" id="convs"></div>
-      <div class="side-foot">Beyond the Horizon · WebLLM</div>
+      <div class="side-foot">Beyond the Horizon</div>
     </aside>
     <div class="chat">
       <div class="msgs" id="msgs"></div>
       <div class="composer">
         <div class="box">
           <textarea id="input" rows="1" placeholder="Mensagem..."></textarea>
-          <button class="btn-send" id="send" disabled aria-label="Enviar">
+          <button class="btn-send" id="send" aria-label="Enviar">
             <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </button>
         </div>
-        <div class="hint">Horizon AI · modelo no seu navegador · pode errar</div>
+        <div class="hint">Horizon AI · configure a API em /admin.html · pode errar</div>
       </div>
     </div>
   </div>
 </div>
 
-<script type="module">
-  // Modelo leve para mais dispositivos. Troque depois se quiser um maior.
-  const MODEL_ID = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
-  const SYSTEM = 'Você é a Horizon AI, assistente da Beyond the Horizon. Seja clara e objetiva. Use Markdown quando ajudar. Responda sempre em português do Brasil.';
+<script>
+  const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+  const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
+  const STORAGE_OPS = 'bth_ops_config_v1';
   const SU = 'horizon_ai_users_v2';
   const SS = 'horizon_ai_session_v2';
+  const SYSTEM = 'Você é a Horizon AI, assistente da Beyond the Horizon. Seja clara e objetiva. Use Markdown quando ajudar. Responda em português do Brasil.';
 
-  let engine = null;
-  let engineReady = false;
-  let engineLoading = false;
   let user = null, chats = [], current = null, busy = false;
-
   const $ = (id) => document.getElementById(id);
+
+  function getOps() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_OPS) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function getApiKey() {
+    const k = (getOps().key || '').trim();
+    if (!k || k.includes('COLE_SUA')) return '';
+    return k;
+  }
+  function getModel() {
+    return (getOps().model || DEFAULT_MODEL).trim() || DEFAULT_MODEL;
+  }
+  function refreshApiStatus() {
+    const ok = !!getApiKey();
+    const el = $('api-status');
+    el.className = 'status ' + (ok ? 'on' : 'off');
+    el.textContent = ok ? 'API ok' : 'API não configurada';
+  }
 
   function sha256(str) {
     function rotr(n,x){return (x>>>n)|(x<<(32-n));}
@@ -402,56 +384,6 @@
     const i=$(id); i.type=i.type==='password'?'text':'password';
   }
 
-  function setStatus(mode, text){
-    const el=$('ai-status');
-    el.className='status '+mode;
-    el.textContent=text;
-  }
-
-  async function ensureEngine(){
-    if(engineReady && engine) return engine;
-    if(engineLoading) {
-      while(engineLoading) await new Promise(r=>setTimeout(r,200));
-      if(engineReady) return engine;
-    }
-    engineLoading=true;
-    $('model-gate').classList.add('show');
-    $('gate-text').textContent='Baixando o modelo no seu navegador…';
-    $('gate-bar').style.width='0%';
-    $('gate-pct').textContent='0%';
-    setStatus('load', 'Carregando IA…');
-    $('send').disabled=true;
-
-    try {
-      if(!navigator.gpu) {
-        throw new Error('Este navegador não tem WebGPU. Use Chrome ou Edge atualizado.');
-      }
-      const webllm = await import('https://esm.run/@mlc-ai/web-llm');
-      engine = await webllm.CreateMLCEngine(MODEL_ID, {
-        initProgressCallback: (p) => {
-          const pct = Math.max(0, Math.min(100, Math.round((p.progress || 0) * 100)));
-          $('gate-bar').style.width = pct + '%';
-          $('gate-pct').textContent = pct + '%';
-          if(p.text) $('gate-text').textContent = p.text;
-        }
-      });
-      engineReady = true;
-      setStatus('on', 'IA pronta');
-      $('send').disabled = false;
-      $('model-gate').classList.remove('show');
-      return engine;
-    } catch (err) {
-      engineReady = false;
-      engine = null;
-      setStatus('off', 'IA offline');
-      $('gate-text').textContent = (err && err.message) ? err.message : 'Falha ao carregar o modelo.';
-      $('gate-pct').textContent = 'Erro';
-      throw err;
-    } finally {
-      engineLoading = false;
-    }
-  }
-
   function register(){
     const nome=$('reg-nome').value.trim();
     const u=$('reg-user').value.trim().toLowerCase().replace(/\s+/g,'');
@@ -487,16 +419,14 @@
     $('app').classList.remove('on');
     $('auth').classList.remove('hidden');
   }
-  async function enter(u){
+  function enter(u){
     user={id:u.id,nome:u.nome,user:u.user};
     $('auth').classList.add('hidden');
     $('app').classList.add('on');
     try{ chats=JSON.parse(localStorage.getItem(convKey())||'[]'); if(!Array.isArray(chats)) chats=[]; }catch(e){ chats=[]; }
     nova();
+    refreshApiStatus();
     $('input').focus();
-    try { await ensureEngine(); } catch(e) {
-      append('bot', 'Não foi possível carregar a IA: '+(e.message||e), true, true);
-    }
   }
   function boot(){
     try{
@@ -592,20 +522,33 @@
   }
   function stopTyping(){ const t=$('typing'); if(t) t.remove(); }
 
-  async function callWebLLM(hist){
-    const eng = await ensureEngine();
+  async function callGroq(hist){
+    const key = getApiKey();
+    if(!key){
+      throw new Error('API não configurada. Abra /admin.html, salve a key da Groq e volte aqui (mesmo navegador).');
+    }
     const messages = [{ role:'system', content: SYSTEM }];
     hist.forEach(m => messages.push({
       role: m.role === 'bot' ? 'assistant' : 'user',
       content: m.text
     }));
-    const reply = await eng.chat.completions.create({
-      messages,
-      temperature: 0.7,
-      max_tokens: 1024
+    const res = await fetch(GROQ_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + key
+      },
+      body: JSON.stringify({
+        model: getModel(),
+        messages,
+        temperature: 0.7,
+        max_tokens: 2048
+      })
     });
-    const content = reply.choices?.[0]?.message?.content;
-    if(!content) throw new Error('Resposta vazia do modelo.');
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok) throw new Error(data.error?.message || data.message || ('Erro HTTP ' + res.status));
+    const content = data.choices?.[0]?.message?.content;
+    if(!content) throw new Error('Resposta vazia da API.');
     return String(content).trim();
   }
 
@@ -624,19 +567,17 @@
     conv.mensagens.push({role:'user',text});
     append('user',text); save(); listChats(); typing();
     try{
-      const ans=await callWebLLM(conv.mensagens);
+      const ans=await callGroq(conv.mensagens);
       stopTyping(); append('bot',ans);
       conv.mensagens.push({role:'bot',text:ans}); save();
     }catch(err){
       stopTyping();
-      append('bot', err.message||'Erro ao gerar resposta', true, true);
+      append('bot', err.message||'Erro na API', true, true);
     }
-    busy=false;
-    if(engineReady) $('send').disabled=false;
-    input.focus();
+    busy=false; $('send').disabled=false;
+    input.focus(); refreshApiStatus();
   }
 
-  // Events
   $('tab-login').onclick=()=>setTab('login');
   $('tab-reg').onclick=()=>setTab('reg');
   $('btn-login').onclick=login;
