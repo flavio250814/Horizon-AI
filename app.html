@@ -422,17 +422,22 @@
     const i=$(id); i.type=i.type==='password'?'text':'password';
   }
 
+  function normUser(v){
+    return String(v||'').trim().toLowerCase().replace(/\s+/g,'').replace(/[^a-z0-9._-]/g,'');
+  }
   function register(){
     const nome=$('reg-nome').value.trim();
-    const u=$('reg-user').value.trim().toLowerCase().replace(/\s+/g,'');
+    const u=normUser($('reg-user').value);
     const p=$('reg-pass').value;
     const p2=$('reg-pass2').value;
     if(nome.length<2) return msgAuth('Informe o nome.');
-    if(u.length<3) return msgAuth('Usuário: mín. 3 caracteres.');
+    if(u.length<3) return msgAuth('Usuário: mín. 3 caracteres (letras/números).');
     if(p.length<6) return msgAuth('Senha: mín. 6 caracteres.');
     if(p!==p2) return msgAuth('Senhas não coincidem.');
     const list=users();
-    if(list.some(x=>x.user===u)) return msgAuth('Usuário já existe.');
+    if(list.some(x=>x.user===u)) {
+      return msgAuth('Este usuário já existe neste navegador. Vá em Entrar ou use outro nome.');
+    }
     const s=salt();
     const novo={ id:'u_'+Date.now(), nome, user:u, salt:s, hash:hash(p,s) };
     list.push(novo); saveUsers(list);
@@ -440,13 +445,18 @@
     enter(novo);
   }
   function login(){
-    const u=$('login-user').value.trim().toLowerCase().replace(/\s+/g,'');
+    const u=normUser($('login-user').value);
     const p=$('login-pass').value;
     if(!u||!p) return msgAuth('Preencha usuário e senha.');
     const list=users();
-    if(!list.length) return msgAuth('Nenhuma conta. Crie uma.');
+    if(!list.length) {
+      return msgAuth('Nenhuma conta neste navegador. Clique em Criar conta (localhost e Netlify são separados).');
+    }
     const found=list.find(x=>x.user===u);
-    if(!found) return msgAuth('Usuário não encontrado.');
+    if(!found) {
+      const nomes = list.map(x=>x.user).slice(0,5).join(', ');
+      return msgAuth('Usuário não encontrado. Contas neste navegador: ' + nomes);
+    }
     if(hash(p,found.salt)!==found.hash) return msgAuth('Senha incorreta.');
     sessionStorage.setItem(SS, JSON.stringify({id:found.id,nome:found.nome,user:found.user}));
     enter(found);
@@ -674,9 +684,10 @@
   $('lock-login').onclick=()=>togglePass('login-pass');
   $('lock-reg').onclick=()=>togglePass('reg-pass');
   $('btn-clear').onclick=()=>{
-    if(!confirm('Apagar contas deste navegador?')) return;
+    const n = users().length;
+    if(!confirm('Apagar ' + n + ' conta(s) deste navegador?')) return;
     localStorage.removeItem(SU); sessionStorage.removeItem(SS);
-    msgAuth('Contas apagadas.', true); setTab('reg');
+    msgAuth('Contas apagadas. Agora crie uma nova em Criar conta.', true); setTab('reg');
   };
   $('login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') login(); });
   $('reg-pass2').addEventListener('keydown',e=>{ if(e.key==='Enter') register(); });
