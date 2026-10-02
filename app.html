@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,53 +8,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #070b14;
-      --panel: #0c1220;
-      --soft: #111827;
-      --text: #f3f6fb;
-      --muted: #8b9bb8;
-      --line: rgba(255,255,255,0.08);
-      --blue: #3b82f6;
-      --cyan: #22d3ee;
-      --danger: #f43f5e;
+      --bg: #070b14; --panel: #0c1220; --soft: #111827;
+      --text: #f3f6fb; --muted: #8b9bb8; --line: rgba(255,255,255,0.08);
+      --blue: #3b82f6; --cyan: #22d3ee; --danger: #f43f5e;
       --grad: linear-gradient(135deg, #3b82f6, #06b6d4);
       --user-bg: rgba(59,130,246,0.18);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg); color: var(--text);
-      height: 100vh; overflow: hidden;
-    }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); height:100vh; overflow:hidden; }
 
-    /* AUTH */
     #auth {
-      min-height: 100vh; display:flex; align-items:center; justify-content:center;
-      padding: 1.5rem;
-      background:
-        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(59,130,246,0.18), transparent);
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(59,130,246,0.18), transparent);
     }
     #auth.hidden { display:none; }
     .auth-card {
-      width: 100%; max-width: 380px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 18px; padding: 2rem 1.6rem;
+      width:100%; max-width:380px; background:var(--panel);
+      border:1px solid var(--line); border-radius:18px; padding:2rem 1.6rem;
     }
-    .auth-logo {
-      display:flex; align-items:center; justify-content:center; gap:10px;
-      margin-bottom: 0.4rem;
-    }
-    .auth-logo img { height: 36px; border-radius: 8px; }
+    .auth-logo { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:0.4rem; }
+    .auth-logo img { height:36px; border-radius:8px; }
     .auth-logo span {
-      font-weight: 700; font-size: 1.15rem;
-      background: var(--grad);
+      font-weight:700; font-size:1.15rem; background:var(--grad);
       -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
     .auth-sub { text-align:center; color:var(--muted); font-size:0.85rem; margin-bottom:1.4rem; }
-    .tabs {
-      display:flex; gap:4px; background:var(--soft); border-radius:10px; padding:3px; margin-bottom:1.2rem;
-    }
+    .tabs { display:flex; gap:4px; background:var(--soft); border-radius:10px; padding:3px; margin-bottom:1.2rem; }
     .tab {
       flex:1; border:none; background:transparent; color:var(--muted);
       padding:0.55rem; border-radius:8px; font:inherit; font-weight:600; font-size:0.85rem; cursor:pointer;
@@ -63,23 +42,19 @@
     .field { margin-bottom:0.85rem; }
     .field label { display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.3rem; }
     .field input {
-      width:100%; padding:0.75rem 0.9rem;
-      background:var(--soft); border:1px solid var(--line); border-radius:10px;
-      color:var(--text); font:inherit; font-size:0.9rem; outline:none;
+      width:100%; padding:0.75rem 0.9rem; background:var(--soft);
+      border:1px solid var(--line); border-radius:10px; color:var(--text); font:inherit; font-size:0.9rem; outline:none;
     }
-    .field input:focus { border-color: rgba(59,130,246,0.5); }
+    .field input:focus { border-color:rgba(59,130,246,0.5); }
     .pass-wrap { position:relative; }
     .pass-wrap input { padding-right:2.8rem; }
     .btn-lock {
       position:absolute; right:8px; top:50%; transform:translateY(-50%);
-      width:32px; height:32px; border:none; border-radius:8px;
-      background:transparent; color:var(--muted); cursor:pointer;
+      width:32px; height:32px; border:none; border-radius:8px; background:transparent; color:var(--muted); cursor:pointer;
       display:flex; align-items:center; justify-content:center;
     }
     .btn-lock svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.75; stroke-linecap:round; }
-    .auth-msg {
-      display:none; font-size:0.8rem; padding:0.55rem 0.75rem; border-radius:8px; margin-bottom:0.85rem;
-    }
+    .auth-msg { display:none; font-size:0.8rem; padding:0.55rem 0.75rem; border-radius:8px; margin-bottom:0.85rem; }
     .auth-msg.show { display:block; }
     .auth-msg.err { background:rgba(244,63,94,0.12); color:var(--danger); border:1px solid rgba(244,63,94,0.25); }
     .auth-msg.ok { background:rgba(34,211,238,0.1); color:var(--cyan); border:1px solid rgba(34,211,238,0.2); }
@@ -94,21 +69,38 @@
     .auth-foot { text-align:center; margin-top:1rem; font-size:0.72rem; color:var(--muted); opacity:0.7; }
     .auth-foot a { color:var(--cyan); text-decoration:none; }
 
-    /* APP */
+    /* Loading model */
+    #model-gate {
+      display:none; position:fixed; inset:0; z-index:100;
+      background:rgba(7,11,20,0.92); backdrop-filter:blur(8px);
+      align-items:center; justify-content:center; padding:1.5rem;
+    }
+    #model-gate.show { display:flex; }
+    .gate-card {
+      width:100%; max-width:420px; background:var(--panel);
+      border:1px solid var(--line); border-radius:18px; padding:1.75rem 1.5rem; text-align:center;
+    }
+    .gate-card h3 { font-size:1.05rem; margin-bottom:0.4rem; }
+    .gate-card p { font-size:0.85rem; color:var(--muted); line-height:1.5; margin-bottom:1rem; }
+    .bar {
+      height:8px; border-radius:99px; background:var(--soft); overflow:hidden; margin-bottom:0.6rem;
+    }
+    .bar > i {
+      display:block; height:100%; width:0%; background:var(--grad);
+      transition:width 0.25s ease;
+    }
+    .gate-pct { font-size:0.8rem; color:var(--cyan); font-weight:600; }
+    .gate-note { font-size:0.75rem; color:var(--muted); margin-top:0.85rem; line-height:1.45; }
+
     #app { display:none; height:100vh; flex-direction:column; }
     #app.on { display:flex; }
 
     .top {
-      height:56px; flex-shrink:0;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 1rem; border-bottom:1px solid var(--line);
-      background:rgba(7,11,20,0.9); backdrop-filter:blur(10px);
+      height:56px; flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
+      padding:0 1rem; border-bottom:1px solid var(--line); background:rgba(7,11,20,0.9);
     }
     .top-left { display:flex; align-items:center; gap:10px; }
-    .btn-menu {
-      display:none; background:none; border:none; color:var(--muted);
-      font-size:1.25rem; cursor:pointer; padding:4px 8px;
-    }
+    .btn-menu { display:none; background:none; border:none; color:var(--muted); font-size:1.25rem; cursor:pointer; padding:4px 8px; }
     .top-brand { display:flex; align-items:center; gap:8px; font-weight:600; font-size:0.95rem; text-decoration:none; color:var(--text); }
     .top-brand img { height:26px; border-radius:6px; }
     .status {
@@ -116,19 +108,19 @@
       border:1px solid var(--line); color:var(--muted);
     }
     .status.on { color:#4ade80; border-color:rgba(74,222,128,0.3); background:rgba(74,222,128,0.08); }
-    .status.off { color:#fbbf24; border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); }
+    .status.load { color:#fbbf24; border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.08); }
+    .status.off { color:var(--danger); border-color:rgba(244,63,94,0.3); background:rgba(244,63,94,0.08); }
     .top-right { display:flex; gap:0.4rem; align-items:center; }
     .btn-h {
       padding:0.4rem 0.75rem; border-radius:8px; border:1px solid var(--line);
       background:transparent; color:var(--muted); font:inherit; font-size:0.8rem; font-weight:500; cursor:pointer;
     }
-    .btn-h:hover { color:var(--text); border-color:rgba(255,255,255,0.15); }
+    .btn-h:hover { color:var(--text); }
     .btn-h.danger { color:var(--danger); border-color:rgba(244,63,94,0.3); }
 
     .body { flex:1; display:flex; overflow:hidden; }
     .side {
-      width:260px; flex-shrink:0;
-      background:var(--panel); border-right:1px solid var(--line);
+      width:260px; flex-shrink:0; background:var(--panel); border-right:1px solid var(--line);
       display:flex; flex-direction:column;
     }
     .side-top { padding:0.9rem; border-bottom:1px solid var(--line); }
@@ -137,10 +129,7 @@
       background:var(--grad); color:#fff; font:inherit; font-weight:600; font-size:0.85rem; cursor:pointer;
     }
     .convs { flex:1; overflow-y:auto; padding:0.6rem; }
-    .conv {
-      display:flex; align-items:center; gap:6px;
-      padding:0.55rem 0.6rem; border-radius:8px; margin-bottom:2px;
-    }
+    .conv { display:flex; align-items:center; gap:6px; padding:0.55rem 0.6rem; border-radius:8px; margin-bottom:2px; }
     .conv:hover, .conv.active { background:rgba(255,255,255,0.05); }
     .conv-title {
       flex:1; min-width:0; font-size:0.85rem; color:var(--muted);
@@ -152,49 +141,31 @@
       background:transparent; color:var(--muted); cursor:pointer; opacity:0.4; font-size:0.8rem;
     }
     .conv:hover .btn-del { opacity:1; }
-    .btn-del:hover { color:var(--danger); background:rgba(244,63,94,0.12); }
-    .side-foot {
-      padding:0.85rem; border-top:1px solid var(--line);
-      font-size:0.72rem; color:var(--muted); text-align:center;
-    }
+    .btn-del:hover { color:var(--danger); }
+    .side-foot { padding:0.85rem; border-top:1px solid var(--line); font-size:0.72rem; color:var(--muted); text-align:center; }
 
     .chat { flex:1; display:flex; flex-direction:column; min-width:0; }
-    .msgs {
-      flex:1; overflow-y:auto; padding:1.25rem 1.25rem 0.5rem;
-      display:flex; flex-direction:column; gap:1rem;
-    }
-    .msg {
-      display:flex; gap:10px; width:100%; align-items:flex-end;
-      animation: in 0.3s ease both;
-    }
-    @keyframes in {
-      from { opacity:0; transform:translateY(6px); }
-      to { opacity:1; transform:none; }
-    }
+    .msgs { flex:1; overflow-y:auto; padding:1.25rem 1.25rem 0.5rem; display:flex; flex-direction:column; gap:1rem; }
+    .msg { display:flex; gap:10px; width:100%; align-items:flex-end; animation:in 0.3s ease both; }
+    @keyframes in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
     .msg.bot { justify-content:flex-start; padding-right:clamp(1rem,20vw,12rem); }
     .msg.user { justify-content:flex-end; flex-direction:row-reverse; padding-left:clamp(1rem,20vw,12rem); }
     .av {
       width:30px; height:30px; border-radius:50%; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center;
-      font-size:0.75rem; font-weight:700;
+      display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;
     }
     .msg.user .av { background:rgba(59,130,246,0.2); color:var(--blue); }
     .msg.bot .av { background:var(--grad); color:#fff; font-size:0.65rem; }
     .bubble {
-      max-width:100%;
-      font-size:0.95rem; line-height:1.6;
-      padding:0.7rem 1rem; border-radius:16px;
-      word-wrap:break-word;
+      max-width:100%; font-size:0.95rem; line-height:1.6;
+      padding:0.7rem 1rem; border-radius:16px; word-wrap:break-word;
     }
     .msg.user .bubble {
-      background:var(--user-bg);
-      border:1px solid rgba(59,130,246,0.25);
-      border-radius:16px 16px 4px 16px;
-      white-space:pre-wrap; color:var(--text);
+      background:var(--user-bg); border:1px solid rgba(59,130,246,0.25);
+      border-radius:16px 16px 4px 16px; white-space:pre-wrap;
     }
     .msg.bot .bubble {
-      background:rgba(255,255,255,0.04);
-      border:1px solid var(--line);
+      background:rgba(255,255,255,0.04); border:1px solid var(--line);
       border-radius:16px 16px 16px 4px;
     }
     .bubble a { color:var(--cyan); }
@@ -211,46 +182,35 @@
     .bubble p { margin:0 0 0.6rem; }
     .bubble p:last-child { margin:0; }
     .bubble .err { color:var(--danger); }
-    .bubble img.gen {
-      display:block; max-width:min(400px,100%); border-radius:12px;
-      margin-top:0.5rem; border:1px solid var(--line);
-    }
 
     .welcome {
-      flex:1; display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
+      flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
       text-align:center; padding:2rem; max-width:560px; margin:0 auto;
     }
     .welcome h2 { font-size:1.5rem; font-weight:700; margin-bottom:0.4rem; }
     .welcome h2 span {
-      background:var(--grad);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
     }
     .welcome p { color:var(--muted); margin-bottom:1.75rem; font-size:0.95rem; }
     .sugs { display:grid; grid-template-columns:1fr 1fr; gap:0.65rem; width:100%; }
     .sug {
-      text-align:left; padding:0.9rem 1rem;
-      background:rgba(255,255,255,0.03); border:1px solid var(--line);
-      border-radius:12px; cursor:pointer; color:var(--text); font:inherit;
+      text-align:left; padding:0.9rem 1rem; background:rgba(255,255,255,0.03);
+      border:1px solid var(--line); border-radius:12px; cursor:pointer; color:var(--text); font:inherit;
     }
     .sug:hover { border-color:rgba(59,130,246,0.4); }
     .sug strong { display:block; font-size:0.85rem; margin-bottom:0.2rem; }
     .sug span { font-size:0.78rem; color:var(--muted); }
 
-    .composer {
-      padding:0.85rem 1.25rem 1.15rem; flex-shrink:0;
-    }
+    .composer { padding:0.85rem 1.25rem 1.15rem; flex-shrink:0; }
     .box {
-      max-width:820px; margin:0 auto;
-      display:flex; gap:0.5rem; align-items:flex-end;
-      background:var(--panel); border:1px solid var(--line);
-      border-radius:14px; padding:0.5rem 0.55rem 0.5rem 0.9rem;
+      max-width:820px; margin:0 auto; display:flex; gap:0.5rem; align-items:flex-end;
+      background:var(--panel); border:1px solid var(--line); border-radius:14px;
+      padding:0.5rem 0.55rem 0.5rem 0.9rem;
     }
     .box:focus-within { border-color:rgba(59,130,246,0.45); }
     .box textarea {
       flex:1; background:none; border:none; outline:none; color:var(--text);
-      font:inherit; font-size:0.95rem; resize:none; max-height:140px;
-      line-height:1.5; padding:0.45rem 0;
+      font:inherit; font-size:0.95rem; resize:none; max-height:140px; line-height:1.5; padding:0.45rem 0;
     }
     .box textarea::placeholder { color:var(--muted); opacity:0.7; }
     .btn-send {
@@ -264,8 +224,7 @@
 
     .typing { display:flex; gap:4px; padding:2px 0; }
     .typing i {
-      width:6px; height:6px; border-radius:50%; background:var(--cyan);
-      animation: bounce 1.2s infinite;
+      width:6px; height:6px; border-radius:50%; background:var(--cyan); animation:bounce 1.2s infinite;
     }
     .typing i:nth-child(2) { animation-delay:0.15s; }
     .typing i:nth-child(3) { animation-delay:0.3s; }
@@ -296,8 +255,8 @@
     <div class="auth-logo"><img src="logo.png" alt=""><span>Horizon AI</span></div>
     <p class="auth-sub">Entre ou crie sua conta</p>
     <div class="tabs">
-      <button type="button" class="tab on" id="tab-login" onclick="tab('login')">Entrar</button>
-      <button type="button" class="tab" id="tab-reg" onclick="tab('reg')">Criar conta</button>
+      <button type="button" class="tab on" id="tab-login">Entrar</button>
+      <button type="button" class="tab" id="tab-reg">Criar conta</button>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
     <div id="form-login">
@@ -306,12 +265,12 @@
         <label>Senha</label>
         <div class="pass-wrap">
           <input type="password" id="login-pass" autocomplete="current-password">
-          <button type="button" class="btn-lock" onclick="togglePass('login-pass',this)" aria-label="Senha">
+          <button type="button" class="btn-lock" id="lock-login" aria-label="Senha">
             <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
           </button>
         </div>
       </div>
-      <button type="button" class="btn-auth" onclick="login()">Entrar</button>
+      <button type="button" class="btn-auth" id="btn-login">Entrar</button>
     </div>
     <div id="form-reg" style="display:none">
       <div class="field"><label>Nome</label><input type="text" id="reg-nome"></div>
@@ -320,61 +279,76 @@
         <label>Senha</label>
         <div class="pass-wrap">
           <input type="password" id="reg-pass" autocomplete="new-password">
-          <button type="button" class="btn-lock" onclick="togglePass('reg-pass',this)" aria-label="Senha">
+          <button type="button" class="btn-lock" id="lock-reg" aria-label="Senha">
             <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
           </button>
         </div>
       </div>
       <div class="field"><label>Confirmar senha</label><input type="password" id="reg-pass2"></div>
-      <button type="button" class="btn-auth" onclick="register()">Criar conta</button>
+      <button type="button" class="btn-auth" id="btn-reg">Criar conta</button>
     </div>
-    <button type="button" class="auth-link" onclick="clearUsers()">Limpar contas deste navegador</button>
+    <button type="button" class="auth-link" id="btn-clear">Limpar contas deste navegador</button>
     <p class="auth-foot"><a href="index.html">← Voltar ao início</a></p>
   </div>
 </div>
 
+<div id="model-gate">
+  <div class="gate-card">
+    <h3>Carregando Horizon AI</h3>
+    <p id="gate-text">Baixando o modelo no seu navegador…</p>
+    <div class="bar"><i id="gate-bar"></i></div>
+    <div class="gate-pct" id="gate-pct">0%</div>
+    <p class="gate-note">A IA roda no seu dispositivo (WebLLM). Na primeira vez o download pode demorar. Use Chrome ou Edge com WebGPU.</p>
+  </div>
+</div>
+
 <div id="app">
-  <div class="overlay" id="overlay" onclick="closeSide()"></div>
+  <div class="overlay" id="overlay"></div>
   <header class="top">
     <div class="top-left">
-      <button class="btn-menu" onclick="openSide()">☰</button>
+      <button class="btn-menu" id="btn-menu">☰</button>
       <a class="top-brand" href="index.html"><img src="logo.png" alt=""><span>Horizon AI</span></a>
-      <span class="status off" id="ollama-status">Ollama</span>
+      <span class="status load" id="ai-status">IA…</span>
     </div>
     <div class="top-right">
-      <button class="btn-h" onclick="nova()">Nova</button>
-      <button class="btn-h danger" onclick="logout()">Sair</button>
+      <button class="btn-h" id="btn-nova">Nova</button>
+      <button class="btn-h danger" id="btn-logout">Sair</button>
     </div>
   </header>
   <div class="body">
     <aside class="side" id="side">
-      <div class="side-top"><button class="btn-new" onclick="nova(); closeSide();">Nova conversa</button></div>
+      <div class="side-top"><button class="btn-new" id="btn-new">Nova conversa</button></div>
       <div class="convs" id="convs"></div>
-      <div class="side-foot">Beyond the Horizon</div>
+      <div class="side-foot">Beyond the Horizon · WebLLM</div>
     </aside>
     <div class="chat">
       <div class="msgs" id="msgs"></div>
       <div class="composer">
         <div class="box">
-          <textarea id="input" rows="1" placeholder="Mensagem..." onkeydown="onKey(e)" oninput="grow(this)"></textarea>
-          <button class="btn-send" id="send" onclick="send()" aria-label="Enviar">
+          <textarea id="input" rows="1" placeholder="Mensagem..."></textarea>
+          <button class="btn-send" id="send" disabled aria-label="Enviar">
             <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </button>
         </div>
-        <div class="hint">Horizon AI · Ollama local · pode errar</div>
+        <div class="hint">Horizon AI · modelo no seu navegador · pode errar</div>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-  const OLLAMA_URL = 'http://localhost:11434/api/chat';
-  const OLLAMA_MODEL = 'qwen2.5:7b';
+<script type="module">
+  // Modelo leve para mais dispositivos. Troque depois se quiser um maior.
+  const MODEL_ID = 'Llama-3.2-1B-Instruct-q4f16_1-MLC';
+  const SYSTEM = 'Você é a Horizon AI, assistente da Beyond the Horizon. Seja clara e objetiva. Use Markdown quando ajudar. Responda sempre em português do Brasil.';
   const SU = 'horizon_ai_users_v2';
   const SS = 'horizon_ai_session_v2';
-  const SYSTEM = 'Você é a Horizon AI, assistente da Beyond the Horizon. Seja clara e objetiva. Use Markdown quando ajudar. Responda em português do Brasil.';
 
+  let engine = null;
+  let engineReady = false;
+  let engineLoading = false;
   let user = null, chats = [], current = null, busy = false;
+
+  const $ = (id) => document.getElementById(id);
 
   function sha256(str) {
     function rotr(n,x){return (x>>>n)|(x<<(32-n));}
@@ -414,30 +388,75 @@
   function esc(t){ const d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
 
   function msgAuth(t, ok){
-    const el=document.getElementById('auth-msg');
+    const el=$('auth-msg');
     el.textContent=t; el.className='auth-msg show '+(ok?'ok':'err');
   }
-  function tab(which){
-    document.getElementById('auth-msg').className='auth-msg';
-    document.getElementById('tab-login').classList.toggle('on', which==='login');
-    document.getElementById('tab-reg').classList.toggle('on', which==='reg');
-    document.getElementById('form-login').style.display=which==='login'?'block':'none';
-    document.getElementById('form-reg').style.display=which==='reg'?'block':'none';
+  function setTab(which){
+    $('auth-msg').className='auth-msg';
+    $('tab-login').classList.toggle('on', which==='login');
+    $('tab-reg').classList.toggle('on', which==='reg');
+    $('form-login').style.display=which==='login'?'block':'none';
+    $('form-reg').style.display=which==='reg'?'block':'none';
   }
-  function togglePass(id, btn){
-    const i=document.getElementById(id);
-    i.type=i.type==='password'?'text':'password';
+  function togglePass(id){
+    const i=$(id); i.type=i.type==='password'?'text':'password';
   }
-  function clearUsers(){
-    if(!confirm('Apagar contas deste navegador?')) return;
-    localStorage.removeItem(SU); sessionStorage.removeItem(SS);
-    msgAuth('Contas apagadas.', true); tab('reg');
+
+  function setStatus(mode, text){
+    const el=$('ai-status');
+    el.className='status '+mode;
+    el.textContent=text;
   }
+
+  async function ensureEngine(){
+    if(engineReady && engine) return engine;
+    if(engineLoading) {
+      while(engineLoading) await new Promise(r=>setTimeout(r,200));
+      if(engineReady) return engine;
+    }
+    engineLoading=true;
+    $('model-gate').classList.add('show');
+    $('gate-text').textContent='Baixando o modelo no seu navegador…';
+    $('gate-bar').style.width='0%';
+    $('gate-pct').textContent='0%';
+    setStatus('load', 'Carregando IA…');
+    $('send').disabled=true;
+
+    try {
+      if(!navigator.gpu) {
+        throw new Error('Este navegador não tem WebGPU. Use Chrome ou Edge atualizado.');
+      }
+      const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+      engine = await webllm.CreateMLCEngine(MODEL_ID, {
+        initProgressCallback: (p) => {
+          const pct = Math.max(0, Math.min(100, Math.round((p.progress || 0) * 100)));
+          $('gate-bar').style.width = pct + '%';
+          $('gate-pct').textContent = pct + '%';
+          if(p.text) $('gate-text').textContent = p.text;
+        }
+      });
+      engineReady = true;
+      setStatus('on', 'IA pronta');
+      $('send').disabled = false;
+      $('model-gate').classList.remove('show');
+      return engine;
+    } catch (err) {
+      engineReady = false;
+      engine = null;
+      setStatus('off', 'IA offline');
+      $('gate-text').textContent = (err && err.message) ? err.message : 'Falha ao carregar o modelo.';
+      $('gate-pct').textContent = 'Erro';
+      throw err;
+    } finally {
+      engineLoading = false;
+    }
+  }
+
   function register(){
-    const nome=document.getElementById('reg-nome').value.trim();
-    const u=document.getElementById('reg-user').value.trim().toLowerCase().replace(/\s+/g,'');
-    const p=document.getElementById('reg-pass').value;
-    const p2=document.getElementById('reg-pass2').value;
+    const nome=$('reg-nome').value.trim();
+    const u=$('reg-user').value.trim().toLowerCase().replace(/\s+/g,'');
+    const p=$('reg-pass').value;
+    const p2=$('reg-pass2').value;
     if(nome.length<2) return msgAuth('Informe o nome.');
     if(u.length<3) return msgAuth('Usuário: mín. 3 caracteres.');
     if(p.length<6) return msgAuth('Senha: mín. 6 caracteres.');
@@ -451,8 +470,8 @@
     enter(novo);
   }
   function login(){
-    const u=document.getElementById('login-user').value.trim().toLowerCase().replace(/\s+/g,'');
-    const p=document.getElementById('login-pass').value;
+    const u=$('login-user').value.trim().toLowerCase().replace(/\s+/g,'');
+    const p=$('login-pass').value;
     if(!u||!p) return msgAuth('Preencha usuário e senha.');
     const list=users();
     if(!list.length) return msgAuth('Nenhuma conta. Crie uma.');
@@ -465,17 +484,19 @@
   function logout(){
     sessionStorage.removeItem(SS);
     user=null; chats=[]; current=null;
-    document.getElementById('app').classList.remove('on');
-    document.getElementById('auth').classList.remove('hidden');
+    $('app').classList.remove('on');
+    $('auth').classList.remove('hidden');
   }
-  function enter(u){
+  async function enter(u){
     user={id:u.id,nome:u.nome,user:u.user};
-    document.getElementById('auth').classList.add('hidden');
-    document.getElementById('app').classList.add('on');
+    $('auth').classList.add('hidden');
+    $('app').classList.add('on');
     try{ chats=JSON.parse(localStorage.getItem(convKey())||'[]'); if(!Array.isArray(chats)) chats=[]; }catch(e){ chats=[]; }
     nova();
-    checkOllama();
-    document.getElementById('input').focus();
+    $('input').focus();
+    try { await ensureEngine(); } catch(e) {
+      append('bot', 'Não foi possível carregar a IA: '+(e.message||e), true, true);
+    }
   }
   function boot(){
     try{
@@ -484,19 +505,9 @@
     }catch(e){}
   }
 
-  async function checkOllama(){
-    const el=document.getElementById('ollama-status');
-    try{
-      const r=await fetch('http://localhost:11434/api/tags');
-      if(r.ok){ el.textContent='Ollama online'; el.className='status on'; return; }
-    }catch(e){}
-    el.textContent='Ollama offline'; el.className='status off';
-  }
-
-  function openSide(){ document.getElementById('side').classList.add('open'); document.getElementById('overlay').classList.add('on'); }
-  function closeSide(){ document.getElementById('side').classList.remove('open'); document.getElementById('overlay').classList.remove('on'); }
+  function openSide(){ $('side').classList.add('open'); $('overlay').classList.add('on'); }
+  function closeSide(){ $('side').classList.remove('open'); $('overlay').classList.remove('on'); }
   function grow(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,140)+'px'; }
-  function onKey(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); send(); } }
   function save(){ localStorage.setItem(convKey(), JSON.stringify(chats)); }
 
   function md(src){
@@ -507,7 +518,6 @@
     t=t.replace(/`([^`\n]+)`/g,(_,c)=>saveB('<code>'+esc(c)+'</code>'));
     t=esc(t);
     t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-    t=t.replace(/!\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)/g,'<img class="gen" src="$2" alt="$1">');
     t=t.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
     t=t.split(/\n{2,}/).map(b=>{
       b=b.trim(); if(!b) return '';
@@ -520,31 +530,35 @@
   function nova(){
     current=null;
     const n=user?esc(user.nome.split(' ')[0]):'';
-    document.getElementById('msgs').innerHTML=
+    $('msgs').innerHTML=
       '<div class="welcome" id="welcome">'+
       '<h2>Olá'+(n?', '+n:'')+'. Eu sou a <span>Horizon AI</span>.</h2>'+
       '<p>Como posso ajudar?</p>'+
       '<div class="sugs">'+
-      '<button class="sug" onclick="useSug(\'Me ajuda a escrever um texto profissional\')"><strong>Escrever</strong><span>Texto profissional</span></button>'+
-      '<button class="sug" onclick="useSug(\'Explica inteligência artificial de forma simples\')"><strong>Explicar</strong><span>Qualquer assunto</span></button>'+
-      '<button class="sug" onclick="useSug(\'Organiza um plano de produto de tecnologia\')"><strong>Planejar</strong><span>Projetos</span></button>'+
-      '<button class="sug" onclick="useSug(\'Gera ideias de conteúdo para redes sociais de tech\')"><strong>Ideias</strong><span>Conteúdo</span></button>'+
+      '<button type="button" class="sug" data-sug="Me ajuda a escrever um texto profissional"><strong>Escrever</strong><span>Texto profissional</span></button>'+
+      '<button type="button" class="sug" data-sug="Explica inteligência artificial de forma simples"><strong>Explicar</strong><span>Qualquer assunto</span></button>'+
+      '<button type="button" class="sug" data-sug="Organiza um plano de produto de tecnologia"><strong>Planejar</strong><span>Projetos</span></button>'+
+      '<button type="button" class="sug" data-sug="Gera ideias de conteúdo para redes sociais de tech"><strong>Ideias</strong><span>Conteúdo</span></button>'+
       '</div></div>';
+    $('msgs').querySelectorAll('.sug').forEach(btn=>{
+      btn.onclick=()=>{ $('input').value=btn.getAttribute('data-sug'); send(); };
+    });
     listChats();
-    document.getElementById('input').focus();
+    $('input').focus();
   }
-  function useSug(t){ document.getElementById('input').value=t; send(); }
+
   function listChats(){
-    const el=document.getElementById('convs');
+    const el=$('convs');
     if(!chats.length){ el.innerHTML='<div style="padding:1rem;color:var(--muted);font-size:0.8rem;text-align:center">Nenhuma conversa</div>'; return; }
     el.innerHTML=chats.map(c=>
       '<div class="conv '+(c.id===current?'active':'')+'">'+
-      '<div class="conv-title" onclick="openChat(\''+c.id+'\')">'+esc(c.titulo||'Conversa')+'</div>'+
-      '<button class="btn-del" onclick="delChat(\''+c.id+'\',event)">×</button></div>'
+      '<div class="conv-title" data-id="'+c.id+'">'+esc(c.titulo||'Conversa')+'</div>'+
+      '<button type="button" class="btn-del" data-del="'+c.id+'">×</button></div>'
     ).join('');
+    el.querySelectorAll('.conv-title').forEach(n=>n.onclick=()=>openChat(n.getAttribute('data-id')));
+    el.querySelectorAll('.btn-del').forEach(n=>n.onclick=(e)=>{ e.stopPropagation(); delChat(n.getAttribute('data-del')); });
   }
-  function delChat(id,e){
-    if(e){ e.stopPropagation(); e.preventDefault(); }
+  function delChat(id){
     if(!confirm('Excluir conversa?')) return;
     chats=chats.filter(c=>c.id!==id); save();
     if(current===id) nova(); else listChats();
@@ -552,13 +566,13 @@
   function openChat(id){
     const c=chats.find(x=>x.id===id); if(!c) return;
     current=id;
-    const box=document.getElementById('msgs'); box.innerHTML='';
+    const box=$('msgs'); box.innerHTML='';
     c.mensagens.forEach(m=>append(m.role,m.text,false));
     listChats(); closeSide(); box.scrollTop=box.scrollHeight;
   }
   function append(role, text, anim, isErr){
-    const w=document.getElementById('welcome'); if(w) w.remove();
-    const box=document.getElementById('msgs');
+    const w=$('welcome'); if(w) w.remove();
+    const box=$('msgs');
     const div=document.createElement('div');
     div.className='msg '+role;
     if(anim===false) div.style.animation='none';
@@ -570,41 +584,38 @@
     box.appendChild(div); box.scrollTop=box.scrollHeight;
   }
   function typing(){
-    const box=document.getElementById('msgs');
+    const box=$('msgs');
     const div=document.createElement('div');
     div.className='msg bot'; div.id='typing';
     div.innerHTML='<div class="av">H</div><div class="bubble"><div class="typing"><i></i><i></i><i></i></div></div>';
     box.appendChild(div); box.scrollTop=box.scrollHeight;
   }
-  function stopTyping(){ const t=document.getElementById('typing'); if(t) t.remove(); }
+  function stopTyping(){ const t=$('typing'); if(t) t.remove(); }
 
-  async function callOllama(hist){
-    const messages=[{role:'system',content:SYSTEM}];
-    hist.forEach(m=>messages.push({role:m.role==='bot'?'assistant':'user',content:m.text}));
-    let res;
-    try{
-      res=await fetch(OLLAMA_URL,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({model:OLLAMA_MODEL,messages,stream:false,options:{temperature:0.7}})
-      });
-    }catch(e){
-      throw new Error('Ollama offline. Abra o Ollama e use este site em localhost (Live Server).');
-    }
-    const data=await res.json().catch(()=>({}));
-    if(!res.ok) throw new Error(data.error||('HTTP '+res.status));
-    const c=data.message&&data.message.content;
-    if(!c) throw new Error('Resposta vazia. Rode: ollama pull qwen2.5:7b');
-    return String(c).trim();
+  async function callWebLLM(hist){
+    const eng = await ensureEngine();
+    const messages = [{ role:'system', content: SYSTEM }];
+    hist.forEach(m => messages.push({
+      role: m.role === 'bot' ? 'assistant' : 'user',
+      content: m.text
+    }));
+    const reply = await eng.chat.completions.create({
+      messages,
+      temperature: 0.7,
+      max_tokens: 1024
+    });
+    const content = reply.choices?.[0]?.message?.content;
+    if(!content) throw new Error('Resposta vazia do modelo.');
+    return String(content).trim();
   }
 
   async function send(){
     if(busy||!user) return;
-    const input=document.getElementById('input');
+    const input=$('input');
     const text=input.value.trim();
     if(!text) return;
     input.value=''; input.style.height='auto';
-    busy=true; document.getElementById('send').disabled=true;
+    busy=true; $('send').disabled=true;
     if(!current){
       current='c_'+Date.now();
       chats.unshift({id:current,titulo:text.slice(0,40)+(text.length>40?'…':''),mensagens:[]});
@@ -613,21 +624,41 @@
     conv.mensagens.push({role:'user',text});
     append('user',text); save(); listChats(); typing();
     try{
-      const ans=await callOllama(conv.mensagens);
+      const ans=await callWebLLM(conv.mensagens);
       stopTyping(); append('bot',ans);
       conv.mensagens.push({role:'bot',text:ans}); save();
     }catch(err){
       stopTyping();
-      append('bot', err.message||'Erro', true, true);
+      append('bot', err.message||'Erro ao gerar resposta', true, true);
     }
-    busy=false; document.getElementById('send').disabled=false;
-    input.focus(); checkOllama();
+    busy=false;
+    if(engineReady) $('send').disabled=false;
+    input.focus();
   }
 
-  document.getElementById('login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') login(); });
-  document.getElementById('reg-pass2').addEventListener('keydown',e=>{ if(e.key==='Enter') register(); });
-  // fix onkeydown
-  document.getElementById('input').onkeydown=function(e){ onKey(e); };
+  // Events
+  $('tab-login').onclick=()=>setTab('login');
+  $('tab-reg').onclick=()=>setTab('reg');
+  $('btn-login').onclick=login;
+  $('btn-reg').onclick=register;
+  $('lock-login').onclick=()=>togglePass('login-pass');
+  $('lock-reg').onclick=()=>togglePass('reg-pass');
+  $('btn-clear').onclick=()=>{
+    if(!confirm('Apagar contas deste navegador?')) return;
+    localStorage.removeItem(SU); sessionStorage.removeItem(SS);
+    msgAuth('Contas apagadas.', true); setTab('reg');
+  };
+  $('login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') login(); });
+  $('reg-pass2').addEventListener('keydown',e=>{ if(e.key==='Enter') register(); });
+  $('btn-menu').onclick=openSide;
+  $('overlay').onclick=closeSide;
+  $('btn-nova').onclick=nova;
+  $('btn-new').onclick=()=>{ nova(); closeSide(); };
+  $('btn-logout').onclick=logout;
+  $('send').onclick=send;
+  $('input').onkeydown=e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); send(); } };
+  $('input').oninput=function(){ grow(this); };
+
   boot();
 </script>
 </body>
