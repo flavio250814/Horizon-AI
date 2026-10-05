@@ -425,14 +425,15 @@
             <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
           </button>
         </div>
-        <div class="hint">Horizon AI · configure a API em /admin.html · pode errar</div>
+        <div class="hint">Horizon AI · API no servidor Netlify · pode errar</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+  const CHAT_API = '/.netlify/functions/chat'; // proxy no Netlify (chave no servidor)
+  const CHAT_API_ALT = '/api/chat';
   const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
   const STORAGE_OPS = 'bth_ops_config_v1';
   const SU = 'horizon_ai_users_v2';
@@ -447,7 +448,7 @@
     try { return JSON.parse(localStorage.getItem(STORAGE_OPS) || '{}'); }
     catch (e) { return {}; }
   }
-  function getApiKey() {
+  function getLocalKey() {
     const k = (getOps().key || '').trim();
     if (!k || k.includes('COLE_SUA')) return '';
     return k;
@@ -455,11 +456,39 @@
   function getModel() {
     return (getOps().model || DEFAULT_MODEL).trim() || DEFAULT_MODEL;
   }
+  let serverApiOk = null; // null=desconhecido, true/false após teste
+  async function probeServerApi() {
+    try {
+      const res = await fetch(CHAT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: 'ping' }], max_tokens: 1 })
+      });
+      // 200 = ok; 500 sem key = não; 4xx da groq ainda indica que o proxy existe
+      if (res.status === 404) { serverApiOk = false; return false; }
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 500 && String(data.error || '').includes('GROQ_API_KEY')) {
+        serverApiOk = false; return false;
+      }
+      serverApiOk = true; return true;
+    } catch (e) {
+      serverApiOk = false; return false;
+    }
+  }
   function refreshApiStatus() {
-    const ok = !!getApiKey();
     const el = $('api-status');
-    el.className = 'status ' + (ok ? 'on' : 'off');
-    el.textContent = ok ? 'API ok' : 'API não configurada';
+    if (!el) return;
+    if (serverApiOk === true) {
+      el.className = 'status on'; el.textContent = 'API ok'; return;
+    }
+    if (getLocalKey()) {
+      el.className = 'status on'; el.textContent = 'API local'; return;
+    }
+    if (serverApiOk === false) {
+      el.className = 'status off'; el.textContent = 'API não configurada'; return;
+    }
+    el.className = 'status off'; el.textContent = 'API…';
+    probeServerApi().then(() => refreshApiStatus());
   }
 
   function sha256(str) {
@@ -758,29 +787,65 @@
   function stopTyping(){ const t=$('typing'); if(t) t.remove(); }
 
   async function callGroq(hist){
-    const key = getApiKey();
-    if(!key){
-      throw new Error('API não configurada. Abra /admin.html, salve a key da Groq e volte aqui (mesmo navegador).');
-    }
     const messages = [{ role:'system', content: SYSTEM }];
     hist.forEach(m => messages.push({
       role: m.role === 'bot' ? 'assistant' : 'user',
       content: m.text
     }));
-    const res = await fetch(GROQ_URL, {
+    const payload = {
+      model: getModel(),
+      messages,
+      temperature: 0.7,
+      max_tokens: 2048
+    };
+
+    // 1) Proxy Netlify (funciona em qualquer aparelho se GROQ_API_KEY estiver no painel)
+    let res = null;
+    let data = {};
+    try {
+      res = await fetch(CHAT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      data = await res.json().catch(() => ({}));
+      if (res.status === 404) throw new Error('PROXY_404');
+      if (res.ok) {
+        serverApiOk = true;
+        const content = data.choices?.[0]?.message?.content;
+        if(!content) throw new Error('Resposta vazia da API.');
+        return String(content).trim();
+      }
+      // se a função existe mas key falta, mensagem clara
+      if (data.error && String(data.error).includes('GROQ_API_KEY')) {
+        serverApiOk = false;
+        throw new Error('Configure GROQ_API_KEY no Netlify (Site settings → Environment variables) e faça redeploy.');
+      }
+      // outros erros do proxy (quota etc.)
+      if (res.status !== 404) {
+        throw new Error(data.error || data.message || ('Erro HTTP ' + res.status));
+      }
+    } catch (e) {
+      if (e.message && !e.message.includes('PROXY_404') && e.message.indexOf('Configure GROQ') === 0) throw e;
+      if (e.message && e.message.indexOf('Erro HTTP') === 0) throw e;
+      if (e.message && String(e.message).includes('GROQ_API_KEY')) throw e;
+      // fallback local só no seu PC
+    }
+
+    // 2) Fallback: chave local (só este navegador) — útil em localhost
+    const key = getLocalKey();
+    if (!key) {
+      throw new Error('API não disponível neste aparelho. No Netlify: adicione GROQ_API_KEY em Environment variables e publique netlify/functions/chat.js');
+    }
+    res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + key
       },
-      body: JSON.stringify({
-        model: getModel(),
-        messages,
-        temperature: 0.7,
-        max_tokens: 2048
-      })
+      body: JSON.stringify(payload)
     });
-    const data = await res.json().catch(() => ({}));
+    data = await res.json().catch(() => ({}));
     if(!res.ok) throw new Error(data.error?.message || data.message || ('Erro HTTP ' + res.status));
     const content = data.choices?.[0]?.message?.content;
     if(!content) throw new Error('Resposta vazia da API.');
